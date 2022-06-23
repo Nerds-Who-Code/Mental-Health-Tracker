@@ -1,0 +1,1 @@
+Files used by both the client and server.
