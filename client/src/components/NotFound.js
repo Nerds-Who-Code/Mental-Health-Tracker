@@ -8,3 +8,4 @@ export default function NotFound() {
         <h1>Error: Resource not found</h1>
     </main>);
 }
+

@@ -12,6 +12,7 @@ import RegistrationContainer from './components/RegistrationContainer';
 import ForgotPasswordContainer from './components/ForgotPasswordContainer';
 import DashboardPage from './components/DashboardPage';
 import AddEntryPage from './components/AddEntryPage';
+import ViewEntriesPage from './components/ViewEntriesPage';
 
 /*
   The Main Routing file for this app  
@@ -32,6 +33,7 @@ root.render(
           <Route path="/forgot-password" element={<ForgotPasswordContainer />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/add-entry" element={<AddEntryPage />} />
+          <Route path="/view-entries" element={<ViewEntriesPage />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -6,13 +6,19 @@ export default function ForgotPasswordContainer() {
     //Value of the email input box
     const [emailInput, setEmailInput] = useState('');
 
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setEmailInput(value);
+    };
+
     //Login authorization
     const passwordReset = (e) => {
         //prevent page from refreshing
         e.preventDefault();
 
-        //Login authorization code
-    }
+        //Add reset code here
+    };
+
     return (
         <div>
             <h2>Password reset</h2>
@@ -24,14 +30,18 @@ export default function ForgotPasswordContainer() {
                     type="email"
                     id="emailInput"
                     placeholder="E-mail"
-                    value={emailInput} 
-                    required />
+                    value={emailInput}
+                    onChange={handleChange}
+                    required 
+                />
                 <br />
                 <input 
                     type="submit" 
-                    value="Send" />
+                    value="Send" 
+                />
             </form>
             <button><Link to="/">Go back</Link></button>
         </div>
     );
 }
+

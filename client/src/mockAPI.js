@@ -1,59 +1,79 @@
-import Users from "./mockData";
+import USERS from "./mockData";
 
 // THESE ARE JUST MOCK API FUNCTIONS FOR TESTING AND SHOULD BE REPLACED BY REAL ONES
 
 // API FUNCTIONS
 
-// Get all users
-export function getAllUsers() {
-    return Users;
+// Get all USERS
+export function getAllUSERS() {
+    return USERS;
 }
 
 // Get a single user by username
 export function getUser(username) {
-    return Users.find(
-      (user) => user.username === username
-    );
+    let foundUser = USERS.find((user) => 
+        user.username === username
+        );
+    if (foundUser !== undefined) {
+        return foundUser;
+    }
+    return `Error: User with ${username} not found`;
 }
 
 // Get a single user by id
 export function getUserById(id) {
-    return Users.find(
-      (user) => user.id === id
-    );
+    let foundUser = USERS.find((id) => 
+        user.id === id
+        );
+    if (foundUser !== undefined) {
+        return foundUser;
+    }
+    return `Error: User with ${id} not found`;
 }
 
 // Change the value of key of user with 'username'
-// This function is not complete yet ;_;
-export function updateUser(username, key, value) {
-   let indexOfUserToBeUpdated = Users.findIndex(
-        (user) => Users.username === username
-    );
-
-    let userToBeUpdated = Users[indexOfUserToBeUpdated];
-
-    // This function is not complete yet ;_;
-
-/*
-    for (var key in userToBeUpdated) {
-        if (userToBeUpdated.hasOwnProperty(key)) {
-            userToBeUpdated[key] = value;
+export function updateUser(username, prop, value) {
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof String)) {
+        //Check if the user has the property that needs to be updated
+        if(userToBeUpdated.hasOwnProperty(prop)) {
+            userToBeUpdated[prop] = value;
+                return userToBeUpdated
+        } else {
+            return `Error: Update failed, User does not have the property ${prop}`;
         }
-    }   
-*/
+    }
 }
 
 // Create a new user
 // newUserData is an object
 export function createUser(newUserData) {
-    Users.push(newUserData);
+    USERS.push(newUserData);
 }
-
 
 // Delete a user by username
 export function deleteUser(username) {
-    Users = Users.filter(
-      (user) => user.username !== username
+    USERS = USERS.filter((user) => 
+        user.username !== username
     );
+}
+
+// Add entry to a user
+export function addEntry(username, entry) {
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof String)) {
+        userToBeUpdated['entries'].push(entry);
+    }
+}
+
+// Delete entry from a user
+export function deleteEntry(username, entry) {
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof String)) {
+        //Add delete code here
+    }
 }
 

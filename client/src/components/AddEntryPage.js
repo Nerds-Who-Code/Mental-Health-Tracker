@@ -1,40 +1,54 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link} from "react-router-dom"; // eslint-disable-next-line
+import addEntry from '../mockAPI'; //Dot forget to replace with real API
 
 export default function AddEntryPage() {
-    const [type, setType] = useState("Stress");
-    const [level, setLevel] = useState(1);
+
+    //Values of all the input boxes
+    const [entryState, setEntryState] = useState({
+        type: "Stress",
+        level: 1,
+        event: "work",
+        note: "Your note here..."
+    });
+
+    //Handles changes in the input boxes (Saves user input to the React State manager)
+    //e is the event that is accociated with the input box that the user is inputting/using
+    //make sure to keep the name attribute of html element the same as the key in state object
+    const handleChange = (e) => {
+        //const value = evt.target.type === "checkbox" ? e.target.checked : e.target.value;
+        const value = e.target.value;
+        setEntryState({
+            ...entryState,
+            [e.target.name]: value
+        });
+    };
 
     //Send entry data to the database
     const addNewEntry = (e) => {
         //prevent page from refreshing
         e.preventDefault();
+        
+        //Add the entry to the user database
+        //addEntry(username, entry);
 
-        //New entry code here
+        //Send user back to the dashboard after entry submit
+        window.location.href = 'http://localhost:3000/dashboard';
 
-    };
-
-    //Set the type when user selects 1 of the 3 radio buttons
-    const handleTypeChange = (e) => {
-        setType(e.target.value);
-    };
-
-    //Set the level on user input
-    const handleLevelChange = (e) => {
-        setLevel(e.target.value);
     };
 
     return (
         <div>
-            <h2>{type} Tracker</h2>
+            <h2>{entryState.type} Tracker</h2>
             <form action="#" onSubmit={addNewEntry}>
-                <div onchange={handleTypeChange}>
+                <div>
                     <label>
                     <input
                         type="radio"
                         name="type"
                         value="Stress"
-                        checked={type === "Stress"}
+                        checked={entryState.type === "Stress"}
+                        onChange={handleChange}
                     />
                     Stress
                     </label>
@@ -44,7 +58,8 @@ export default function AddEntryPage() {
                         type="radio"
                         name="type"
                         value="Anxiety"
-                        checked={type === "Anxiety"}
+                        checked={entryState.type === "Anxiety"}
+                        onChange={handleChange}
                     />
                     Anxiety
                     </label>
@@ -54,70 +69,92 @@ export default function AddEntryPage() {
                         type="radio"
                         name="type"
                         value="Depression"
-                        checked={type === "Depression"}
+                        checked={entryState.type === "Depression"}
+                        onChange={handleChange}
                     />
                     Depression
                     </label>
                 </div>
                 <br />
-                <label>On a scale of 1 to 10, one meaning "little to none" <br /> and 10 meaning "extreme" how was your {type.toLowerCase()} level today?</label>
+                <label>On a scale of 1 to 10, one meaning "little to none" <br /> and 10 meaning "extreme" how was your {entryState.type.toLowerCase()} level today?</label>
                 <br />
                 <input 
                     type="range"
                     step="1"
                     min="1" 
                     max="10"
-                    onChange={handleLevelChange} />
-                <span>{level}</span>
+                    name="level"
+                    value={entryState.level}
+                    onChange={handleChange} 
+                />
+                <span>{entryState.level}</span>
                 <br />
-                <label>Did anything in particular contribute to your elevated level of {type.toLowerCase()}?</label>
+                <label>Did anything in particular contribute to your elevated level of {entryState.type.toLowerCase()}?</label>
                 <br />
                 <input 
                     type="checkbox"
-                    name="entryEvent" 
-                    value="family"/>
+                    name="event" 
+                    value="family"
+                    onChange={handleChange} 
+                />
                 <label>Family problem.</label>
                 <br />
                 <input 
                     type="checkbox"
-                    name="entryEvent" 
-                    value="relationship"/>
+                    name="event" 
+                    value="relationship"
+                    onChange={handleChange} 
+                />
                 <label>Relationship problem.</label>
                 <br />
                 <input 
                     type="checkbox"
-                    name="entryEvent" 
-                    value="work"/>
+                    name="event" 
+                    value="work"
+                    onChange={handleChange} 
+                />
                 <label>School or work.</label>
                 <br />
                 <input 
                     type="checkbox"
-                    name="entryEvent" 
-                    value="significant"/>
+                    name="event" 
+                    value="significant"
+                    onChange={handleChange} 
+                />
                 <label>Significant life event.</label>
                 <br />
                 <input 
                     type="checkbox"
-                    name="entryEvent" 
-                    value="trauma"/>
+                    name="event" 
+                    value="trauma"
+                    onChange={handleChange} 
+                />
                 <label>A traumatic event.</label>
                 <br />
                 <input 
                     type="checkbox"
-                    name="entryEvent" 
-                    value="unknown"/>
+                    name="event" 
+                    value="unknown"
+                    onChange={handleChange} 
+                />
                 <label>I am not sure.</label>
                 <br />
                 <label>Notes for today's entry (optional):</label>
                 <br />
                 <input
-                    type="textarea" />
+                    type="textarea"
+                    name="note"
+                    value={entryState.note}
+                    onChange={handleChange} 
+                />
                 <br />
                 <input
                     type="submit"
-                    value="Add entry" />
+                    value="Add entry" 
+                />
             </form>
             <Link to="/dashboard"><button>Cancel</button></Link>
         </div>
     );
 }
+

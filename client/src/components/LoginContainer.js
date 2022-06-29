@@ -1,13 +1,25 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
-import {getUser} from '../mockAPI';
+import {getUser, updateUser} from '../mockAPI'; //Dot forget to replace with real API
 
 export default function LoginContainer() {
 
-    //Value of the username input box
-    const [userNameInput, setUserNameInput] = useState('');
-    //Value of the password input box
-    const [passwordInput, setPasswordInput] = useState('');
+    //Values of the username and password input boxes
+    const [loginContainerState, setLoginContainerState] = useState({
+        userNameInput: "",
+        passwordInput: ""
+    });
+
+    //Handles changes in the input boxes (Saves user input to the React State manager)
+    //e is the event that is accociated with the input box that the user is inputting/using
+    //make sure to keep the name attribute of html element the same as the key in state object
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setLoginContainerState({
+            ...loginContainerState,
+            [e.target.name]: value
+        });
+    };
 
     //Login authorization
     const authorize = (e) => {
@@ -16,17 +28,22 @@ export default function LoginContainer() {
         e.preventDefault();
 
         //Login authorization code
+        //Replace this code by an authorization with the Database
         
-        if (userNameInput ===  getUser(userNameInput).username && passwordInput === getUser(userNameInput).password) {
-            //Go to the dashboard after authorization is success
-            window.location.href = 'http://localhost/dashboard';
+        if (loginContainerState.userNameInput === getUser(loginContainerState.userNameInput).username && 
+            loginContainerState.passwordInput === getUser(loginContainerState.userNameInput).password) {
+
+            //Change user status to logged in
+            updateUser(loginContainerState.userNameInput, 'isLoggedIn', true) // Dont forget to replace this with real API function
+            updateUser(loginContainerState.userNameInput, 'lastLogin', new Date()) // Dont forget to replace this with real API function
+
+            //Go to the dashboard after authorization is success (dont forget to replace the url with a real production url)
+            window.location.href = 'http://localhost:3000/dashboard';
         //Failed login
         } else {
             alert("Your username or password is wrong");
         }
-
-        
-    }
+    };
 
     return (
         <div>
@@ -36,18 +53,25 @@ export default function LoginContainer() {
                 <input 
                     type="text"
                     placeholder="Username"
-                    value={userNameInput} 
-                    required />
+                    name="userNameInput"
+                    value={loginContainerState.userNameInput} 
+                    onChange={handleChange}
+                    required 
+                />
                 <br />
                 <input 
                     type="password"
                     placeholder="Password"
-                    value={passwordInput}
-                    required /> 
+                    name="passwordInput"
+                    value={loginContainerState.passwordInput}
+                    onChange={handleChange}
+                    required 
+                /> 
                 <br />
                 <input 
                     type="submit" 
-                    value="Log in" />
+                    value="Log in" 
+                />
             </form>
             <Link to="/forgot-password">Forgot password?</Link>
             <hr />
@@ -55,3 +79,4 @@ export default function LoginContainer() {
         </div>
     );
 }
+

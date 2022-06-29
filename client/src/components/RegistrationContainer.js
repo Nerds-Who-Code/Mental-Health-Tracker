@@ -1,18 +1,25 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
+import {createUser} from '../mockAPI'; //Dont forget to replace with real API
 
 export default function RegistrationContainer() {
 
-     //Value of the name input box
-    const [nameInput, setNameInput] = useState('');
-    //Value of the username input box
-    const [userNameInput, setUserNameInput] = useState('');
-    //Value of the email input box
-    const [emailInput, setEmailInput] = useState('');
-    //Value of the password input box
-    const [passwordInput, setPasswordInput] = useState('');
-    //Value of the age input box
-    const [ageInput, setAgeInput] = useState('');
+    //Values of all the input boxes
+    const [registrationState, setRegistrationState] = useState({
+        nameInput: "",
+        userNameInput: "",
+        emailInput: "",
+        passwordInput: "",
+        ageInput: 1
+    });
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setRegistrationState({
+            ...registrationState,
+            [e.target.name]: value
+        });
+    };
 
     //Registration action
     const register = (e) => {
@@ -20,7 +27,26 @@ export default function RegistrationContainer() {
         e.preventDefault();
 
         //Registration code (send info to Back-end database)
+
+        //Transform the user inputs to the user data
+        let userData = {
+            userId: Math.floor(Math.random() * 1000),
+            name: registrationState.nameInput,
+            username: registrationState.userNameInput,
+            email: registrationState.emailInput,
+            password: registrationState.passwordInput,
+            age: registrationState.ageInput,
+            lastLogin: new Date(),
+            isLoggedIn: false,
+            entries: []
+        };
+        //Add a new user to the database (dont forget to replace this with real API function)
+        createUser(userData);
+        //Send user back to the landing page after registration submit
+        window.location.href = 'http://localhost:3000/';
+
     }
+
     return (
         <div>
             <h2>Create a new account</h2>
@@ -32,8 +58,11 @@ export default function RegistrationContainer() {
                     type="text"
                     id="nameInput"
                     placeholder="Name"
-                    value={nameInput} 
-                    required />
+                    name="nameInput"
+                    value={registrationState.nameInput}
+                    onChange={handleChange}
+                    required 
+                />
                 <br />
                 <label for="userNameInput">USERNAME</label>
                 <br />
@@ -41,8 +70,11 @@ export default function RegistrationContainer() {
                     type="text"
                     id="userNameInput"
                     placeholder="Username"
-                    value={userNameInput} 
-                    required />
+                    name="userNameInput"
+                    value={registrationState.userNameInput}
+                    onChange={handleChange}
+                    required 
+                />
                 <br />
                 <label for="emailInput">EMAIL</label>
                 <br />
@@ -50,8 +82,11 @@ export default function RegistrationContainer() {
                     type="email"
                     id="emailInput"
                     placeholder="E-mail"
-                    value={emailInput} 
-                    required />
+                    name="emailInput"
+                    value={registrationState.emailInput}
+                    onChange={handleChange}
+                    required 
+                />
                 <br />
                 <label for="passwordInput">PASSWORD</label>
                 <br />
@@ -59,8 +94,11 @@ export default function RegistrationContainer() {
                     type="password"
                     id="passwordInput"
                     placeholder="Password"
-                    value={passwordInput} 
-                    required /> 
+                    name="passwordInput"
+                    value={registrationState.passwordInput}
+                    onChange={handleChange}
+                    required 
+                /> 
                 <br />
                 <label for="ageInput">AGE</label>
                 <br />
@@ -68,14 +106,19 @@ export default function RegistrationContainer() {
                     type="number"
                     id="ageInput"
                     placeholder="Age"
-                    value={ageInput} 
-                    required /> 
+                    name="ageInput"
+                    value={registrationState.ageInput}
+                    onChange={handleChange}
+                    required 
+                /> 
                 <br />
                 <input 
                     type="submit" 
-                    value="Sign up" />
+                    value="Sign up" 
+                />
             </form>
-            <a href="#">Forgot password?</a>
+            <Link to="/">Go back</Link>
         </div>
     );
 }
+
