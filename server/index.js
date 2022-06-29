@@ -73,12 +73,6 @@ function defaultPortWarning() {
 	return;
 }
 
-// Send the index.html file
-app.get('/', function(req, res) {
-    //This should point to the client's .html file in ./client/
-  res.sendFile(path.join(__dirname, '/index.html'));
-});
-
 //Start server
 app.listen(port, () => {
     console.log("============");
@@ -86,40 +80,9 @@ app.listen(port, () => {
     console.log(`${defaultPortWarning()}`);
     console.log(`ExpressJS server started...`);
     console.log(`Listening on "https://localhost" on port: ${port}...`)
-    
-    console.log("------------");
-    console.log("SERVER INFO:");
-    console.log("------------");
-
-    console.log("Machine info:");
-    console.log(`OS: ${MachineInfo.OSname}`);
-    console.log(`CPU Arch: ${MachineInfo.CPUarchitecture}`);
-    console.log(`hostname: ${MachineInfo.hostname}`);
-    console.log(`initial memory: ${MachineInfo.initialMemory} bytes`);
-    console.log(`free memory available: ${MachineInfo.freeMemAvailable} bytes `);
-    console.log(`network info: ${MachineInfo.networkInfo}`);
-    console.log(`uptime: ${MachineInfo.upTime}`);
-    
-    console.log("++++++++++++");
-    
-    console.log("Directory info:");
-    console.log(`home directory: ${DirectoryInfo.homeDirectory}`);
-    console.log(`current working directory: ${DirectoryInfo.currentWorkingDirectory}`);
-    console.log(`directory of this file: ${DirectoryInfo.directoryOfThisFile}`);
-    
     console.log("------------"); 
     console.log(`Use CTRL+C to stop the server...`);
   });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
 
