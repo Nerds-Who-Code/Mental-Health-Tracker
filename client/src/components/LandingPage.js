@@ -1,6 +1,6 @@
 import HeaderImage from "./HeaderImage";
 import LoginContainer from "./LoginContainer";
-//import demoImage from "../images/mental-health-tracker-demoImg.jpg" 
+import demoImage from "../images/mental-health-tracker-demoImg.jpg" 
 
 /*
     in <p>Wanna try out our App?</p> Write more about how the app works and reel new users in.
@@ -17,7 +17,7 @@ export default function LandingPage() {
                 <p>Wanna try out our App?</p>
                 <img 
                     clasName="demoImage" 
-                    src={'../images/mental-health-tracker-demoImg.jpg'}
+                    src={demoImage}
                     alt="mental health tracking app demo image" 
                     width="150" 
                     height="150" />            

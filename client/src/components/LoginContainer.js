@@ -4,6 +4,13 @@ import {getUser, updateUser} from '../mockAPI'; //Dot forget to replace with rea
 
 export default function LoginContainer() {
 
+    /*
+        You can use any account in mockData.js to login. Just use the values of username and password.
+        The easiest account to login is:
+        username: test123
+        password: test
+    */
+
     //Values of the username and password input boxes
     const [loginContainerState, setLoginContainerState] = useState({
         userNameInput: "",

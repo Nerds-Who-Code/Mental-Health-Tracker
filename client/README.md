@@ -10,6 +10,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
+### How to login:
+
+You can use any account in ./client/mockData.js to login. Just use the values of username and password.
+The easiest account to login is:
+username: test123
+password: test
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
