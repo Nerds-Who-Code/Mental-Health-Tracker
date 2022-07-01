@@ -1,0 +1,14 @@
+{
+  "name": "mental-health-tracker-server",
+  "version": "1.0.0",
+  "description": "mental-health-tracker-back-end",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nerds Who Code",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
