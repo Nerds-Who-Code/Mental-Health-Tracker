@@ -1,11 +1,14 @@
 //import logo from './logo.svg';
 import './App.css';
-import LandingPage from './components/LandingPage';
+import { Outlet } from 'react-router-dom';
 
+//This is the global component
+
+//Every component will render inside the <div></div> of the App component. See index.js for more info.
 function App() {
   return (
     <div className="App">
-      <LandingPage />
+      <Outlet />
     </div>
   );
 }
