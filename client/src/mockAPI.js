@@ -22,7 +22,7 @@ export function getUser(username) {
 
 // Get a single user by id
 export function getUserById(id) {
-    let foundUser = USERS.find((id) => 
+    let foundUser = USERS.find((user) => 
         user.id === id
         );
     if (foundUser !== undefined) {
