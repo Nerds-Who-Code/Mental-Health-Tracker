@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 //Load React components
 import App from './App';
+import LandingPage from './components/LandingPage';
 import NotFound from './components/NotFound';
 import RegistrationContainer from './components/RegistrationContainer';
 import ForgotPasswordContainer from './components/ForgotPasswordContainer';
@@ -19,22 +20,27 @@ import ViewEntriesPage from './components/ViewEntriesPage';
 
   The "*" path will match only when no other routes do. (Redirect to 404 page not found)
   When routes are nested the UI should be nested too. Meaning the parent UI will still display
-*/
 
+  <Route path="*" element={<NotFound />} />
+  The index route will be default component/route for the "/" path.
+  That means that both the App component and LandingPage component will render on the "/" path.
+  The App component is the global component and will render on every path.
+  Every component will render inside the <div></div> in the App component. See App.js for more info.
+*/
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-          <Route path="/" element={<App />} > 
-  
+          <Route exact path="/" element={<App />} > 
+            <Route index element={<LandingPage />} />
+            <Route path="/register" element={<RegistrationContainer />}  />
+            <Route path="/forgot-password" element={<ForgotPasswordContainer />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/add-entry" element={<AddEntryPage />} />
+            <Route path="/view-entries" element={<ViewEntriesPage />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="/register" element={<RegistrationContainer />}  />
-          <Route path="/forgot-password" element={<ForgotPasswordContainer />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/add-entry" element={<AddEntryPage />} />
-          <Route path="/view-entries" element={<ViewEntriesPage />} />
-          <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
