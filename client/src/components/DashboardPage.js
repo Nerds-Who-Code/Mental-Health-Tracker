@@ -7,7 +7,7 @@ export default function DashboardPage() {
     // Load username (from database) when the component mounts
     // Not complete yet
     useEffect( () => {
-        setName("Peter");
+        setName("Your should be username here");
     }, []);
 
     //Log out code

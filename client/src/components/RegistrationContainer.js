@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
-import {createUser} from '../mockAPI'; //Dont forget to replace with real API
+import {Link, useNavigate} from "react-router-dom";
+import axios from 'axios';
 
 export default function RegistrationContainer() {
+
+    //Used for navigating to different routes in the client without buttons
+    const navigate = useNavigate();
 
     //Values of all the input boxes
     const [registrationState, setRegistrationState] = useState({
@@ -22,29 +25,39 @@ export default function RegistrationContainer() {
     };
 
     //Registration action
-    const register = (e) => {
+    const register = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
 
         //Registration code (send info to Back-end database)
 
         //Transform the user inputs to the user data
+        //The userId will be generated on the server.
         let userData = {
-            userId: Math.floor(Math.random() * 1000),
+            userId: 0,
             name: registrationState.nameInput,
             username: registrationState.userNameInput,
             email: registrationState.emailInput,
             password: registrationState.passwordInput,
             age: registrationState.ageInput,
-            lastLogin: new Date(),
+            lastLogin: "00-00-0000", 
             isLoggedIn: false,
             entries: []
         };
-        //Add a new user to the database (dont forget to replace this with real API function)
-        createUser(userData);
-        //Send user back to the landing page after registration submit
-        window.location.href = 'http://localhost:3000/';
 
+        try {
+            //Ask the server to add a new user to the database || // eslint-disable-next-line
+            let createdUser = await axios.post(`http://localhost:3001/api/createUser/${registrationState.userNameInput}`, {user: userData});
+            console.log(createdUser);
+            
+            alert("successfully registered");
+            //Send user back to the landing page after registration submit
+            navigate("/")
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong while creating your account.");
+        }
+        //createUser(userData);
     }
 
     return (
@@ -52,7 +65,7 @@ export default function RegistrationContainer() {
             <h2>Create a new account</h2>
             <h3>Already registered? <Link to="/">Login here</Link></h3>
             <form action="#" onSubmit={register}>
-                <label for="nameInput">NAME</label>
+                <label htmlFor="nameInput">NAME</label>
                 <br />
                 <input 
                     type="text"
@@ -64,7 +77,7 @@ export default function RegistrationContainer() {
                     required 
                 />
                 <br />
-                <label for="userNameInput">USERNAME</label>
+                <label htmlFor="userNameInput">USERNAME</label>
                 <br />
                 <input 
                     type="text"
@@ -76,7 +89,7 @@ export default function RegistrationContainer() {
                     required 
                 />
                 <br />
-                <label for="emailInput">EMAIL</label>
+                <label htmlFor="emailInput">EMAIL</label>
                 <br />
                 <input 
                     type="email"
@@ -88,7 +101,7 @@ export default function RegistrationContainer() {
                     required 
                 />
                 <br />
-                <label for="passwordInput">PASSWORD</label>
+                <label htmlFor="passwordInput">PASSWORD</label>
                 <br />
                 <input 
                     type="password"
@@ -100,7 +113,7 @@ export default function RegistrationContainer() {
                     required 
                 /> 
                 <br />
-                <label for="ageInput">AGE</label>
+                <label htmlFor="ageInput">AGE</label>
                 <br />
                 <input 
                     type="number"

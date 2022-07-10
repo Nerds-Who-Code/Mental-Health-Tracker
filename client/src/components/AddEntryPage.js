@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom"; // eslint-disable-next-line
-import addEntry from '../mockAPI'; //Dot forget to replace with real API
+import {Link, useNavigate} from "react-router-dom"; // eslint-disable-next-line
 
 export default function AddEntryPage() {
+
+    const navigate = useNavigate();
 
     //Values of all the input boxes
     const [entryState, setEntryState] = useState({
@@ -33,8 +34,7 @@ export default function AddEntryPage() {
         //addEntry(username, entry);
 
         //Send user back to the dashboard after entry submit
-        window.location.href = 'http://localhost:3000/dashboard';
-
+        navigate("/dashboard");
     };
 
     return (
