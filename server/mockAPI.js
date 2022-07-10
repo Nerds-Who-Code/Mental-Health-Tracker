@@ -1,0 +1,245 @@
+const bcrypt = require("bcrypt"); //import the bcrypt library for hashing functions
+//Import mockData 
+var USERS = require("./mockData"); //This can not be a const or else there will be an error with delete requests.
+
+// THESE ARE JUST MOCK API FUNCTIONS FOR TESTING AND SHOULD BE REPLACED BY REAL ONES
+
+// API FUNCTIONS
+
+// =============USER FUNCTIONS==================
+
+// Get all USERS
+// Be careful with this function as it returns All USERS data without checking for passwords
+// This function should only be used for testing. Its not included in the APIrouter.js
+// Also if the data is extremely large it will slow down the server.
+function getAllUSERS() {
+    return USERS;
+}
+
+// Get a single user by username
+function getUser(username) {
+    const foundUser = USERS.find((user) => 
+        user.username === username
+        );
+    if (foundUser !== undefined) {
+        //User is found.
+        return foundUser;
+    }
+    return new Error(`Error: User with username ${username} not found`);
+}
+
+// Get a single user by id
+function getUserById(id) {
+    const foundUser = USERS.find((user) => 
+        user.id === id
+        );
+    if (foundUser !== undefined) {
+        return foundUser;
+    }
+    return new Error(`Error: User with id ${id} not found`);
+}
+
+// Get a single user by username AND password
+// Only returns userdata if both username and password match
+function getUserByPasswd(username, password) {
+    const foundUser = getUser(username);
+    //User not found
+    if (foundUser instanceof Error) {
+        //We won't tell specifically if the username was found or not, or if the password was incorrect.
+        //This leaves an ambiguous error message for someone trying to hack an account.
+        return new Error(`Error: User with username ${username} not found or password incorrect`);
+    }
+    //Check if password matches
+    if (foundUser.password === password) {
+        return foundUser;
+    }
+    return new Error(`Error: User with username ${username} not found or password incorrect`);
+}
+
+// This function is used to login a user
+// Only returns userdata if both username and password match
+// And sets the isLoggedIn flag of the user to true.
+async function loginUser(username, password) {
+    const foundUser = getUser(username);
+    //User not found
+    if (foundUser instanceof Error) {
+        //We won't tell specifically if the username was found or not, or if the password was incorrect.
+        //This leaves an ambiguous error message for someone trying to hack an account.
+        return new Error(`Error: User with username ${username} not found or password incorrect`);
+    }
+    //Check if password matches
+    //Check if a plaintext password is equal to the hash of that password. (The hash is stored in user data)
+    try {
+        //First argument is the plainttext password, the 2nd argument is the hash of that password
+        const isPasswdEqual = await bcrypt.compare(password, foundUser.password);
+        //If password are equal (isPasswdEqual = true)
+        if (isPasswdEqual) {
+            //Change isLoggedIn to true.
+            updateUser(username, "isLoggedIn", true);
+            //Set last login to current date.
+            let today = new Date();
+            //Date format: DD-MM-YYYY or Date-Month-Year
+            let dateToStr = (today.getDate() + "-" + (today.getMonth()+1) + "-" + today.getFullYear());
+            updateUser(username, "lastLogin", dateToStr);
+
+            return foundUser;
+        } else {
+            return new Error(`Error: User with username ${username} not found or password incorrect`);
+        }
+    } catch (error) {
+        return new Error(`Error: User with username ${username} not found or password incorrect`);
+    }
+}
+
+// Change the value of key of user with 'username'
+function updateUser(username, prop, value) {
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof Error)) {
+        //Check if the user has the property that needs to be updated
+        if(userToBeUpdated.hasOwnProperty(prop)) {
+            userToBeUpdated[prop] = value;
+                return userToBeUpdated
+        } else {
+            return new Error(`Error: Update failed, User does not have the property ${prop}`);
+        }
+    }
+    //This should be an Error object
+    return userToBeUpdated;
+}
+
+// Create a new user
+// newUserData is an object
+async function createUser(username, newUserData) {
+    //First check if user with that username already exists
+    const foundUser = getUser(username);
+    if (!(foundUser instanceof Error)) {
+        return new Error(`Error: This user with username ${username} already exists`);
+    } else {
+        //Before adding the user to the database we need to first hash the password for security.
+        //Only the hash is stored in the user data. The plaintext password is never stored.
+        //When the user logs in it will check if the given plaitext password matches the hash stored in the database.
+        //See function loginUser for more info.
+        try {
+            //generate the salt. The default salt rounds is 10.
+            const salt = await bcrypt.genSalt(10);
+            //create the hash (convert plaintext password to a hash)
+            const hashedPassword = await bcrypt.hash(newUserData.password, salt);
+            //Replace the plaintext password of the user with their hashed version.
+            newUserData.password = hashedPassword;
+            //Generate a unique ID for each user.
+            newUserData.userId = Math.floor(Math.random() * 10000);
+            //Add the user to the database
+            USERS.push(newUserData);
+            return newUserData;
+        } catch (err) {
+            return new Error(`Error: Can not create user ${username} because something went wrong.`);
+        }
+    }
+}
+
+// Delete a user by username
+function deleteUser(username) {
+    USERS = USERS.filter((user) => 
+        user.username !== username
+    );
+}
+
+// =============ENTRY FUNCTIONS==================
+
+// Get all entries from a user by username
+function getAllEntries(username) {
+    //Find the user
+    let user = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(user instanceof Error)) {
+        return user.entries;
+    }
+    //This should be an Error object
+    return user;
+}
+
+// Get entry from a user by username and entryID
+function getEntry(username, entryID) {
+    //Find the user
+    let user = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(user instanceof Error)) {
+        //Find the entry
+        const entry = user.entries.find((entry) =>
+            entry.entryId === entryID
+        );
+        return entry;
+    } 
+    //This should be an Error object
+    return user;
+}
+
+// Add entry to a user
+function addEntry(username, entry) {
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof Error)) {
+        userToBeUpdated['entries'].push(entry);
+        return entry;
+    }
+    //This should be an Error object
+    return userToBeUpdated;
+}
+
+// Edit an entry by looking for EntryID and username
+function updateEntry(username, entryID, prop, value) {
+    //Find the user
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof Error)) {
+        //Find the entry
+        const entryToBeUpdated = userToBeUpdated.entries.find((entry) =>
+            entry.entryId === entryID
+        );
+        //Check if the property in the entry exists
+        if(entryToBeUpdated.hasOwnProperty(prop)) {
+            //update the property
+            entryToBeUpdated[prop] = value;
+            return entryToBeUpdated
+        } else {
+            return new Error (`Error: Update failed, Entry does not have the property ${prop}`);
+        }
+    } else {
+        return new Error (`Error: Update failed, User with username ${username} does not exist`);
+    }
+}
+
+// Delete entry from a user
+function deleteEntry(username, entryID) {
+    let userToBeUpdated = getUser(username);
+    //First check getUser does NOT return an error
+    if (!(userToBeUpdated instanceof Error)) {
+        //Delete entry
+        userToBeUpdated.entries = userToBeUpdated.entries.filter((entry) => 
+            entry.entryId !== entryID
+        );
+        return 0; //No error. This is used in error checking
+    } else {
+        //This should be an Error object
+        return userToBeUpdated;
+    }
+}
+
+//Export all the functions
+module.exports = 
+    {
+    getAllUSERS: getAllUSERS,
+    getUser: getUser,
+    getUserById: getUserById,
+    getUserByPasswd: getUserByPasswd,
+    loginUser: loginUser,
+    updateUser: updateUser,
+    createUser: createUser,
+    deleteUser: deleteUser,
+    getAllEntries: getAllEntries,
+    getEntry, getEntry,
+    addEntry: addEntry,
+    updateEntry: updateEntry,
+    deleteEntry: deleteEntry
+    };
