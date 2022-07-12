@@ -39,6 +39,11 @@ function getUserById(id) {
     return new Error(`Error: User with id ${id} not found`);
 }
 
+    /*
+    NOTE: This function is outdated. Use loginUser() instead.
+          I am still keeping this function here for now, 
+          cause I might use it in the future for something else. 
+    */
 // Get a single user by username AND password
 // Only returns userdata if both username and password match
 function getUserByPasswd(username, password) {
@@ -78,8 +83,8 @@ async function loginUser(username, password) {
             updateUser(username, "isLoggedIn", true);
             //Set last login to current date.
             let today = new Date();
-            //Date format: DD-MM-YYYY or Date-Month-Year
-            let dateToStr = (today.getDate() + "-" + (today.getMonth()+1) + "-" + today.getFullYear());
+            //Date format: YYYY-MM-DD or Year-Month-Day
+            let dateToStr = (today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
             updateUser(username, "lastLogin", dateToStr);
 
             return foundUser;
@@ -104,8 +109,7 @@ function updateUser(username, prop, value) {
             return new Error(`Error: Update failed, User does not have the property ${prop}`);
         }
     }
-    //This should be an Error object
-    return userToBeUpdated;
+    return new Error(`Error: User with username ${username} not found`);
 }
 
 // Create a new user
@@ -155,8 +159,7 @@ function getAllEntries(username) {
     if (!(user instanceof Error)) {
         return user.entries;
     }
-    //This should be an Error object
-    return user;
+    return new Error(`Error: User with username ${username} not found`);
 }
 
 // Get entry from a user by username and entryID
@@ -171,8 +174,7 @@ function getEntry(username, entryID) {
         );
         return entry;
     } 
-    //This should be an Error object
-    return user;
+    return new Error(`Error: User with username ${username} not found`);
 }
 
 // Add entry to a user
@@ -183,8 +185,7 @@ function addEntry(username, entry) {
         userToBeUpdated['entries'].push(entry);
         return entry;
     }
-    //This should be an Error object
-    return userToBeUpdated;
+    return new Error(`Error: User with username ${username} not found`);
 }
 
 // Edit an entry by looking for EntryID and username
@@ -221,25 +222,25 @@ function deleteEntry(username, entryID) {
         );
         return 0; //No error. This is used in error checking
     } else {
-        //This should be an Error object
-        return userToBeUpdated;
+        return new Error(`Error: User with username ${username} not found`);
     }
 }
 
 //Export all the functions
 module.exports = 
-    {
-    getAllUSERS: getAllUSERS,
-    getUser: getUser,
-    getUserById: getUserById,
-    getUserByPasswd: getUserByPasswd,
-    loginUser: loginUser,
-    updateUser: updateUser,
-    createUser: createUser,
-    deleteUser: deleteUser,
-    getAllEntries: getAllEntries,
-    getEntry, getEntry,
-    addEntry: addEntry,
-    updateEntry: updateEntry,
-    deleteEntry: deleteEntry
-    };
+{
+    getAllUSERS,
+    getUser,
+    getUserById,
+    getUserByPasswd,
+    loginUser,
+    updateUser,
+    createUser,
+    deleteUser,
+    getAllEntries,
+    getEntry,
+    addEntry,
+    updateEntry,
+    deleteEntry,
+};
+
