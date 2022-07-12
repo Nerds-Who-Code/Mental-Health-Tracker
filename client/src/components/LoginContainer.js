@@ -69,6 +69,8 @@ export default function LoginContainer() {
                     value={loginContainerState.userNameInput} 
                     onChange={handleChange}
                     required 
+                    minlength="3"
+                    maxlength="25"
                 />
                 <br />
                 <input 
@@ -78,6 +80,8 @@ export default function LoginContainer() {
                     value={loginContainerState.passwordInput}
                     onChange={handleChange}
                     required 
+                    minlength="3"
+                    maxlength="16"
                 /> 
                 <br />
                 <input 

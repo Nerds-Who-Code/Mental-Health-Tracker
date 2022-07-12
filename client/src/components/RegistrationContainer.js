@@ -1,6 +1,34 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import axios from 'axios';
+import axios from 'axios'; // Library for sending HTTP Requests
+import * as yup from 'yup' // Library for custom form validation
+
+// Create the validation schema for form validation.
+const formSchema = yup.object().shape({
+    nameInput: yup.string()
+                    .min(3)
+                    .max(50)
+                    .required(),
+    userNameInput: yup.string()
+                    .min(3)
+                    .max(25)
+                    .required(),
+    emailInput: yup.string()
+                    .email()
+                    .min(6)
+                    .max(50)
+                    .required(),
+    passwordInput: yup.string()
+                    .min(3)
+                    .max(16)
+                    .required(),
+    ageInput: yup.number()
+                    .positive()
+                    .integer()
+                    .min(1)
+                    .max(125)
+                    .required(),
+});
 
 export default function RegistrationContainer() {
 
@@ -16,6 +44,15 @@ export default function RegistrationContainer() {
         ageInput: 1
     });
 
+    // State for all the form errors
+    const [formErrors, setFormErrors] = useState({
+        nameInput: false,
+        userNameInput: false,
+        emailInput: false,
+        passwordInput: false,
+        ageInput: false,
+      });
+
     const handleChange = (e) => {
         const value = e.target.value;
         setRegistrationState({
@@ -24,27 +61,44 @@ export default function RegistrationContainer() {
         });
     };
 
-    //Registration action
+    //Registration action (OnSubmit form)
     const register = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
 
+        // Validate the input data. (Check if schema of the form is valid.)
+        // abortEarly prevents aborting validation after first error
+        const isFormValid = await formSchema.isValid(registrationState, { abortEarly: false });
+        let userData = {};
+        // If the form is valid
+        if(isFormValid) {
+
+            // NOT ENTIRELY SURE YET HOW TO IMPLEMENT THIS..
+            // ADVICE WOULD BE APPRECIATED
+
+            //Transform the user inputs to the user data
+            //The userId will be generated on the server.
+            userData = {
+                userId: 0,
+                name: registrationState.nameInput,
+                username: registrationState.userNameInput,
+                email: registrationState.emailInput,
+                password: registrationState.passwordInput,
+                age: registrationState.ageInput,
+                lastLogin: "0000-00-00", 
+                isLoggedIn: false,
+                entries: []
+            };
+        // If the form is not valid
+        } else {
+
+            // NOT ENTIRELY SURE YET HOW TO IMPLEMENT THIS...
+            // ADVICE WOULD BE APPRECIATED
+
+            alert("Form is not valid.")
+        }
+
         //Registration code (send info to Back-end database)
-
-        //Transform the user inputs to the user data
-        //The userId will be generated on the server.
-        let userData = {
-            userId: 0,
-            name: registrationState.nameInput,
-            username: registrationState.userNameInput,
-            email: registrationState.emailInput,
-            password: registrationState.passwordInput,
-            age: registrationState.ageInput,
-            lastLogin: "00-00-0000", 
-            isLoggedIn: false,
-            entries: []
-        };
-
         try {
             //Ask the server to add a new user to the database || // eslint-disable-next-line
             let createdUser = await axios.post(`http://localhost:3001/api/createUser/${registrationState.userNameInput}`, {user: userData});
@@ -75,6 +129,8 @@ export default function RegistrationContainer() {
                     value={registrationState.nameInput}
                     onChange={handleChange}
                     required 
+                    minlength="3"
+                    maxlength="50"
                 />
                 <br />
                 <label htmlFor="userNameInput">USERNAME</label>
@@ -87,6 +143,9 @@ export default function RegistrationContainer() {
                     value={registrationState.userNameInput}
                     onChange={handleChange}
                     required 
+                    minlength="3"
+                    maxlength="25"
+                    pattern="[a-zA-Z0-9]+"
                 />
                 <br />
                 <label htmlFor="emailInput">EMAIL</label>
@@ -99,6 +158,8 @@ export default function RegistrationContainer() {
                     value={registrationState.emailInput}
                     onChange={handleChange}
                     required 
+                    minlength="6"
+                    maxlength="50"
                 />
                 <br />
                 <label htmlFor="passwordInput">PASSWORD</label>
@@ -111,6 +172,8 @@ export default function RegistrationContainer() {
                     value={registrationState.passwordInput}
                     onChange={handleChange}
                     required 
+                    minlength="3"
+                    maxlength="16"
                 /> 
                 <br />
                 <label htmlFor="ageInput">AGE</label>
@@ -123,6 +186,7 @@ export default function RegistrationContainer() {
                     value={registrationState.ageInput}
                     onChange={handleChange}
                     required 
+                    min="1" max="125"
                 /> 
                 <br />
                 <input 

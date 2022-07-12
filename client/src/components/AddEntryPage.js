@@ -85,7 +85,8 @@ export default function AddEntryPage() {
                     max="10"
                     name="level"
                     value={entryState.level}
-                    onChange={handleChange} 
+                    onChange={handleChange}
+                    required
                 />
                 <span>{entryState.level}</span>
                 <br />
