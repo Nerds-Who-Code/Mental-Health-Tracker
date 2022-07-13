@@ -112,7 +112,7 @@ APIrouter.put('/loginUser/:username', async (req, res, next) => {
         //We need to wrap this in a self-executing async function, because the hashing library is also async.
         const foundUser = await loginUser(req.params.username, req.body.password);
         if (!(foundUser instanceof Error)) {
-            res.status(201).res.send(foundUser);
+            res.status(201).send(foundUser);
         } else {
             res.status(404).send(foundUser.message);
         }
