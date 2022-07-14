@@ -135,7 +135,7 @@ APIrouter.put('/updateUser/:username', (req, res, next) => {
     try {
         const updatedUser = updateUser(req.params.username, req.body.property, req.body.value);
         if (!(updatedUser instanceof Error)) {
-            res.status(201).res.send(foundUser);
+            res.status(201).send(updatedUser);
         }
         res.status(404).send(updatedUser.message);
     } catch (error) {

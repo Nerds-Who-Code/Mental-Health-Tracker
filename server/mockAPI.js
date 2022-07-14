@@ -103,6 +103,15 @@ function updateUser(username, prop, value) {
     if (!(userToBeUpdated instanceof Error)) {
         //Check if the user has the property that needs to be updated
         if(userToBeUpdated.hasOwnProperty(prop)) {
+            //Turn the value from a string to a boolean.
+            //Transforms "false" to false and "true" to true.
+            //This is because the server receives the data as a string
+            /* FOR SOME REASON THIS CODE BREAKS LOGGING IN ?? */
+            /*
+            if(prop === "isLoggedIn") {
+                value = (value === "false");
+            }
+            */
             userToBeUpdated[prop] = value;
                 return userToBeUpdated
         } else {
