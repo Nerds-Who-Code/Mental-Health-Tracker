@@ -1,12 +1,12 @@
 import {Link} from "react-router-dom";
 
-export default function ViewEntriesPage() {
+export default function EntryOverViewPage() {
 
     let entries = "";
 
     return (
         <div>
-            <h2>View your entries</h2>
+            <h1>Your Mental Health Overview</h1>
             <p>{entries}</p>
             <Link to="/dashboard"><button>Go back to dashboard</button></Link>
         </div>

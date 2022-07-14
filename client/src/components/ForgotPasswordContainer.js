@@ -24,7 +24,7 @@ export default function ForgotPasswordContainer() {
             <h2>Password reset</h2>
             <h3>Forgot your password?</h3>
             <form action="#" onSubmit={passwordReset}>
-            <label for="emailInput">EMAIL</label>
+            <label htmlFor="emailInput">EMAIL</label>
                 <br />
                 <input 
                     type="email"

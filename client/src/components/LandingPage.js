@@ -16,7 +16,7 @@ export default function LandingPage() {
                 <h1 className="landingPageTitle">Let us help you take care of you</h1>
                 <p>Wanna try out our App?</p>
                 <img 
-                    clasName="demoImage" 
+                    className="demoImage" 
                     src={demoImage}
                     alt="mental health tracking app demo image" 
                     width="150" 
@@ -25,4 +25,5 @@ export default function LandingPage() {
         </div>
     );
 }
+
 
