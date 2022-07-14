@@ -154,6 +154,38 @@ var USERS = [
                 level: 2,
                 event: ["unknown"],
                 notes: "I am just a simple test user."
+            },
+            {
+                entryId: 1,
+                date: "20-06-2022",
+                type: "depression",
+                level: 9,
+                event: ["unknown"],
+                notes: "I am sick of being a test user."
+            },
+            {
+                entryId: 2,
+                date: "21-06-2022",
+                type: "stress",
+                level: 6,
+                event: ["unknown"],
+                notes: "Oh no :( more tests."
+            },
+            {
+                entryId: 3,
+                date: "13-07-2022",
+                type: "anxiety",
+                level: 1,
+                event: ["unknown"],
+                notes: "TEST! Test123."
+            },
+            {
+                entryId: 4,
+                date: "14-07-2022",
+                type: "anxiety",
+                level: 1,
+                event: ["unknown"],
+                notes: "THIS IS A SUPER LONG NOTE... AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA A AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             }
         ]
     },

@@ -10,6 +10,7 @@ const { getUser,
         updateUser,
         createUser,
         deleteUser,
+        getAllEntries,
         addEntry,
         updateEntry,
         deleteEntry } = require('./mockAPI');
@@ -186,6 +187,19 @@ APIrouter.delete('/deleteUser/:username', (req, res, next) => {
 });
 
 // =============ENTRY FUNCTIONS==================
+
+APIrouter.get('/getAllEntries/:username', (req, res, next) => {
+    try {
+        const entries = getAllEntries(req.params.username);
+        if (!(entries instanceof Error)) {
+            res.status(200).send(entries);
+        }
+        res.status(404).send(entries.message);
+    } catch (error) {
+        console.log("500: Internal server error - " + error.message);
+        res.status(500).send(error.message);
+    }
+});
 
 //JSON Request Body Input:
 //{"entry:" {your_entry_data_here}}

@@ -3,9 +3,9 @@ import axios from 'axios';
 
 // The Global State Logic of the app. Implemented with React Redux and Redux Toolkit
 
-// ===================
-//      Actions
-// ===================
+// +++++++++===================++++++++++
+// ACTIONS for userData slice 
+// +++++++++===================++++++++++
 
 export const fetchUserData = createAsyncThunk(
     'userData/fetchUserData',
@@ -42,7 +42,7 @@ export const logoutUser = createAsyncThunk(
 );
 
 // ===================
-// Global State Slices
+//   userData Slice
 // ===================
 
 // The 'slice' or part of the global state handling the global user state
@@ -85,12 +85,62 @@ export const userDataSlice = createSlice(
     }
 );
 
+// +++++++++===================++++++++++
+// ACTIONS for entryData slice 
+// +++++++++===================++++++++++
+
+// Fetch the entries from the server and store in global state
+export const fetchEntries = createAsyncThunk(
+    'userData/fetchEntries',
+    async (username) => {
+        console.log("-->" + username);
+        //Ask the server to logout the user. See /server/APIrouter.js and /server/mockAPI.js to see how this works.
+        const response = await axios.get(`http://localhost:3001/api/getAllEntries/${username}`);
+        return await response.data;
+    }
+);
+
+// ===================
+//   entryData Slice
+// ===================
+
+// The 'slice' or part of the global state handling the global entry state
+export const entryData = createSlice(
+    {
+        name: 'entryData',
+        initialState: {
+            entryInfo: [],
+            status: null
+        },
+        extraReducers: (builder) => {
+            builder.addCase(fetchEntries.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(fetchEntries.fulfilled, (state, action) => {
+                state.entryInfo = action.payload;
+                state.status = "success";
+            })
+            .addCase(fetchEntries.rejected, (state) => {
+                state.status = "failed";
+            })
+            // Make sure the entry data is also cleared when the user logs out
+            .addCase(logoutUser.pending, (state) => {
+                state.entryInfo = [];
+                state.status = null;
+            })
+        }
+    }
+);
+
 // +++ The actual Global State +++
 // This global state combines all the partial global stats called 'slices' into the final combined global state
-const store = configureStore({
+const store = configureStore(
+    {
     reducer: {
-        userData: userDataSlice.reducer 
+        userData: userDataSlice.reducer, 
+        entryData: entryData.reducer
     }
-  });
+  }
+);
 export default store;
 
