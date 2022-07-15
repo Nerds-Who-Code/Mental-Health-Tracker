@@ -1,10 +1,19 @@
+import {useDispatch, useSelector} from 'react-redux';
 import './Entry.css';
+import {deleteEntry} from '../store';
 
+//This should be styled like a card.
 export default function Entry(props) {
+    const dispatch = useDispatch();
+    const username = useSelector(state => state.userData.userInfo.username);
 
-    //This should be styled like a card.
+    const deleteEntryOnClick = () => {
+        //Dispatch an action to the store to delete the entry on the server and the in the global state.
+        dispatch(deleteEntry({username: username, entryId: props.entryInfo.entryId}));
+    };
 
-    /* There is a bug here where if the events are more than 1,
+    /*  
+        There is a bug here where if the events are more than 1,
         it displays "Unknown"
     */
 
@@ -17,7 +26,7 @@ export default function Entry(props) {
             <p><strong>Events: </strong>{props.entryInfo.event}</p>
             <p><strong>Notes: </strong>{props.entryInfo.notes}</p>
             <button>Edit</button>
-            <button>Delete</button>
+            <button onClick={deleteEntryOnClick}>Delete</button>
         </div>
     )
 }

@@ -240,11 +240,12 @@ APIrouter.put('/updateEntry/:username/:entryID', (req, res, next) => {
 
 APIrouter.delete('/deleteEntry/:username/:entryID', (req, res, next) => {
     try {
-        const isError = deleteEntry(req.params.username, req.params.entryID);
-        if (!(isError instanceof Error)) {
-            res.status(201).send(`Entry with entry ID: ${req.params.entryID} was deleted.`);
+        const entryID = deleteEntry(req.params.username, req.params.entryID);
+        if (!(entryID instanceof Error)) {
+            //On success send the entryID of the deleted entry back as a confirmation.
+            res.status(201).send(entryID);
         }
-        res.status(404).send(isError);
+        res.status(404).send(entryID.message);
     } catch (error) {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);  

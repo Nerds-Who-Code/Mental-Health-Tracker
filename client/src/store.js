@@ -116,9 +116,10 @@ export const addEntry = createAsyncThunk(
 // Delete entry from the server and store the updated entries in global state
 export const deleteEntry = createAsyncThunk(
     'userData/deleteEntry',
-    async (username) => {
+    async (data) => {
         //Ask the server to delete an entry. See /server/APIrouter.js and /server/mockAPI.js to see how this works.
-        const response = await axios.delete(`http://localhost:3001/api/deleteEntry/${username}`);
+        //The entryID of the deleted entry is send back as a result. Which is used to update the state.
+        const response = await axios.delete(`http://localhost:3001/api/deleteEntry/${data.username}/${data.entryId}`);
         return await response.data;
     }
 );
@@ -146,7 +147,7 @@ export const entryData = createSlice(
             .addCase(fetchEntries.rejected, (state) => {
                 state.status = "failed";
             })
-            builder.addCase(addEntry.pending, (state) => {
+            .addCase(addEntry.pending, (state) => {
                 state.status = "loading";
             })
             .addCase(addEntry.fulfilled, (state, action) => {
@@ -155,6 +156,17 @@ export const entryData = createSlice(
                 state.status = "success";
             })
             .addCase(addEntry.rejected, (state) => {
+                state.status = "failed";
+            })
+            .addCase(deleteEntry.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(deleteEntry.fulfilled, (state, action) => {
+                //Delete the entry from the global state
+                state.entryInfo = state.entryInfo.filter((entry) => entry.entryId !== action.payload);
+                state.status = "success";
+            })
+            .addCase(deleteEntry.rejected, (state) => {
                 state.status = "failed";
             })
             // Make sure the entry data is also cleared when the user logs out
