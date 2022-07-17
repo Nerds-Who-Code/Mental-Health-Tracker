@@ -53,7 +53,7 @@ export default function LoginContainer() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center h-screen">
             <h1 className="my-4">Login</h1>
              
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={authorize}>
