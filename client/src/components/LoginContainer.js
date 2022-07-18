@@ -67,40 +67,49 @@ export default function LoginContainer() {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <h3>Sign in to continue</h3>
-            <form action="#" onSubmit={authorize}>
-                <input 
-                    type="text"
-                    placeholder="Username"
-                    name="userNameInput"
-                    value={loginContainerState.userNameInput} 
-                    onChange={handleChange}
-                    required 
-                    minLength="3"
-                    maxLength="25"
-                />
-                <br />
-                <input 
-                    type="password"
-                    placeholder="Password"
-                    name="passwordInput"
-                    value={loginContainerState.passwordInput}
-                    onChange={handleChange}
-                    required 
-                    minLength="3"
-                    maxLength="16"
-                /> 
-                <br />
-                <input 
-                    type="submit" 
-                    value="Log in" 
-                />
+        <div className="flex flex-col items-center justify-center h-screen">
+            <h1 className="my-4">Login</h1>
+             
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={authorize}>
+                <div className="mb-4">
+                    <label for="userNameInput">
+                        Username
+                    </label>
+                    <input 
+                        type="text"
+                        placeholder="Username"
+                        name="userNameInput"
+                        value={loginContainerState.userNameInput} 
+                        onChange={handleChange}
+                        required 
+                    />
+                </div>
+                <div className="mb-6">
+                    <label for="passwordInput">
+                        Password
+                    </label>
+                    <input 
+                        type="password"
+                        placeholder="Password"
+                        name="passwordInput"
+                        value={loginContainerState.passwordInput}
+                        onChange={handleChange}
+                        required 
+                    /> 
+                </div>
+            
+                <div className="flex flex-col items-center justify-between">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Log in">
+                        Log In
+                    </button>
+                    
+                </div>
             </form>
-            <Link to="/forgot-password">Forgot password?</Link>
-            <hr />
-            <button><Link to="/register">Create a new account</Link></button>
+            <a className="my-2 align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                <Link to="/forgot-password">Forgot password?</Link>
+            </a>
+            
+            <Link className="my-4 hover:text-cyan-500" to="/register">Create a new account</Link>
         </div>
     );
 }
