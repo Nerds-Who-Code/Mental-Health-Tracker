@@ -33,17 +33,27 @@ export default function DashboardPage() {
     }
 
     return (
-        <div>
-            <h1>Dashboard</h1>
-            <h2>Welcome back {name}</h2>
-            <h3>What would you like to do today?</h3> 
-            <Link to="/add-entry"><button>Add new entry</button></Link>
-            <br />
-            <Link to="/view-entries"><button>View my entries</button></Link>
-            <Link to="/entry-overview"><button>Mental Health Overview</button></Link>
-            <br />
-            <button onClick={logOut}>Logout</button>
+    <div className='w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-b from-cyan-200 to-blue-200 text-slate-800'>
+        <h1 className='text-2xl font-bold'>Dashboard</h1>
+        <h2 className='text-xl m-2'>Welcome back {name}</h2>
+        <h3 className='m-2'>What would you like to do today?</h3> 
+        <div className='my-4 flex items-center justify-around'>
+            <Link to="/add-entry">
+                <button 
+                    className='mx-2 px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'>
+                    Add new entry
+                </button>
+            </Link>
+            <Link to="/view-entries">
+                <button 
+                    className='mx-2 px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'>
+                    View my entries
+                </button>
+                </Link>            
         </div>
-    );
+        {/* <Link to="/"><button className='px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'onClick={logOut}>Logout</button></Link> */}
+    </div>
+);
+    
 }
 
