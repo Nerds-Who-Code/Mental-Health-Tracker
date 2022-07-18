@@ -48,12 +48,13 @@ export default function RegistrationContainer() {
     }
 
     return (
-        <div>
-            <h2>Create a new account</h2>
-            <h3>Already registered? <Link to="/">Login here</Link></h3>
-            <form action="#" onSubmit={register}>
-                <label for="nameInput">NAME</label>
-                <br />
+        <div className="flex flex-col items-center justify-center h-screen">
+            <h1 className="my-2">Create a new account</h1>
+            <h3 className="my-2">Already registered? <Link className="my-4 hover:text-cyan-500" to="/">Login here</Link></h3>
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={register}>
+            <div class="mb-4">
+                <label for="nameInput">Name</label>
+               
                 <input 
                     type="text"
                     id="nameInput"
@@ -63,9 +64,10 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                 />
-                <br />
-                <label for="userNameInput">USERNAME</label>
-                <br />
+            </div>
+            <div class="mb-6">
+                <label for="userNameInput">Username</label>
+               
                 <input 
                     type="text"
                     id="userNameInput"
@@ -75,9 +77,10 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                 />
-                <br />
-                <label for="emailInput">EMAIL</label>
-                <br />
+            </div>
+            <div class="mb-6">
+                <label for="emailInput">Email</label>
+               
                 <input 
                     type="email"
                     id="emailInput"
@@ -87,9 +90,10 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                 />
-                <br />
-                <label for="passwordInput">PASSWORD</label>
-                <br />
+             </div>  
+             <div className="mb-6">
+                <label for="passwordInput">Password</label>
+               
                 <input 
                     type="password"
                     id="passwordInput"
@@ -99,9 +103,10 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                 /> 
-                <br />
-                <label for="ageInput">AGE</label>
-                <br />
+                  </div>  
+                  <div className="mb-6">
+                <label for="ageInput">Age</label>
+               
                 <input 
                     type="number"
                     id="ageInput"
@@ -111,13 +116,13 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                 /> 
-                <br />
-                <input 
+               </div>
+                <input  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit" 
                     value="Sign up" 
                 />
             </form>
-            <Link to="/">Go back</Link>
+            <a className="my-4 hover:text-cyan-500"><Link to="/">Go back</Link></a>
         </div>
     );
 }
