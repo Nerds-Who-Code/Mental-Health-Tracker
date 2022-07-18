@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;700&family=Raleway:wght@100;400;700&family=Roboto:wght@300;500&display=swap");
 
 .App-link {
   color: #61dafb;
@@ -5,4 +6,37 @@
 
 #root {
   margin: 0px;
+}
+
+.dashboard-title {
+  font-family: "Raleway" sans-serif;
+  font-weight: 700;
+}
+
+.dashboard-message {
+  font-family: "Raleway" sans-serif;
+  font-weight: 400;
+}
+
+.content-font {
+  font-family: "Lora" sans-serif;
+}
+
+.content-font h2 {
+  font-weight: 700;
+  font-size: 1.8em;
+}
+
+.entry-label {
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+.landing-font {
+  font-family: "Roboto" sans-serif;
+  font-weight: 300;
+}
+
+.landing-font h2 {
+  font-weight: 500;
 }
