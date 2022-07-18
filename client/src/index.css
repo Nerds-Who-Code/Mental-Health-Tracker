@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    h1 {
+      @apply text-4xl;
+    }
+    h2 {
+      @apply text-2xl;
+    }
+    body {
+      @apply bg-gradient-to-b from-cyan-200 to-blue-200;
+      @apply h-screen;
+    }
+  }
