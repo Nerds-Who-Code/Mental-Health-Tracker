@@ -22,9 +22,8 @@ export default function LandingPage() {
         <div>
             {/**<HeaderImage />*/}
             <LoginContainer />
-        
-            
         </div>
     );
 }
+
 
