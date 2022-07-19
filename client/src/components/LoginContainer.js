@@ -3,7 +3,6 @@ import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../store';
 
-
 export default function LoginContainer() {
     //Used for navigating to different routes in the client without buttons
     const navigate = useNavigate();
@@ -11,6 +10,9 @@ export default function LoginContainer() {
     const dispatch = useDispatch();
     //Get the userData from the global state
     const userDataGlobalState = useSelector(state => state.userData);
+
+    //Used for navigating to different routes in the client without buttons
+    const navigate = useNavigate();
 
     /*
         You can use any account in mockData.js to login. Just use the values of username and password.
@@ -62,46 +64,56 @@ export default function LoginContainer() {
         //prevents the browser from performing its default behavior when a form is submitted.
         //prevent page from refreshing
         e.preventDefault();
+      
         //Retrieve the user data from the server and store it in the global state. See store.js for how this happens.
         dispatch(loginUser({username: loginContainerState.userNameInput, password: loginContainerState.passwordInput}));
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <h3>Sign in to continue</h3>
-            <form action="#" onSubmit={authorize}>
-                <input 
-                    type="text"
-                    placeholder="Username"
-                    name="userNameInput"
-                    value={loginContainerState.userNameInput} 
-                    onChange={handleChange}
-                    required 
-                    minLength="3"
-                    maxLength="25"
-                />
-                <br />
-                <input 
-                    type="password"
-                    placeholder="Password"
-                    name="passwordInput"
-                    value={loginContainerState.passwordInput}
-                    onChange={handleChange}
-                    required 
-                    minLength="3"
-                    maxLength="16"
-                /> 
-                <br />
-                <input 
-                    type="submit" 
-                    value="Log in" 
-                />
+        <div className="flex flex-col items-center justify-center h-screen">
+            <h1 className="my-4">Login</h1>
+             
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={authorize}>
+                <div className="mb-4">
+                    <label for="userNameInput">
+                        Username
+                    </label>
+                    <input 
+                        type="text"
+                        placeholder="Username"
+                        name="userNameInput"
+                        value={loginContainerState.userNameInput} 
+                        onChange={handleChange}
+                        required 
+                    />
+                </div>
+                <div className="mb-6">
+                    <label for="passwordInput">
+                        Password
+                    </label>
+                    <input 
+                        type="password"
+                        placeholder="Password"
+                        name="passwordInput"
+                        value={loginContainerState.passwordInput}
+                        onChange={handleChange}
+                        required 
+                    /> 
+                </div>
+            
+                <div className="flex flex-col items-center justify-between">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Log in">
+                        Log In
+                    </button>
+                </div>
             </form>
-            <Link to="/forgot-password">Forgot password?</Link>
-            <hr />
-            <button><Link to="/register">Create a new account</Link></button>
+            <a className="my-2 align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                <Link to="/forgot-password">Forgot password?</Link>
+            </a>
+            
+            <Link className="my-4 hover:text-cyan-500" to="/register">Create a new account</Link>
         </div>
     );
+
 }
 
