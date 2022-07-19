@@ -14,17 +14,6 @@ export default function ViewEntriesPage() {
         dispatch(fetchEntries(username));
     }, []);
 
-    //Insert an H3 if the data is still loading.
-    let loadingState = null;
-    if (entryDataGlobalState.status === 'pending') {
-        loadingState = (<h3>Loading...</h3>);
-    }
-    //Insert an H3 if the data fetching has failed
-    let failedState = null;
-    if (entryDataGlobalState.status === 'failed') {
-        loadingState = (<h3>Something went wrong.</h3>);
-    }
-
     // Insert an H3 if the data is still loading.
     let loadingState = null;
     if (entryDataGlobalState.status === 'pending') {

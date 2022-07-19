@@ -89,7 +89,7 @@ export default function RegistrationContainer() {
         } else {
             alert("Form is not valid.")
         }
-        
+
         //Registration code (send info to Back-end database)
         try {
             //Ask the server to add a new user to the database || // eslint-disable-next-line
@@ -120,8 +120,8 @@ export default function RegistrationContainer() {
                     value={registrationState.nameInput}
                     onChange={handleChange}
                     required 
-                    minlength="3"
-                    maxlength="50"
+                    minLength="3"
+                    maxLength="50"
                 />
             </div>
             <div class="mb-6">
@@ -134,8 +134,8 @@ export default function RegistrationContainer() {
                     value={registrationState.userNameInput}
                     onChange={handleChange}
                     required 
-                    minlength="3"
-                    maxlength="25"
+                    minLength="3"
+                    maxLength="25"
                     pattern="[a-zA-Z0-9]+"
                 />
             </div>
@@ -149,8 +149,8 @@ export default function RegistrationContainer() {
                     value={registrationState.emailInput}
                     onChange={handleChange}
                     required 
-                    minlength="6"
-                    maxlength="50"
+                    minLength="6"
+                    maxLength="50"
                 />
              </div>  
              <div className="mb-6">
@@ -163,8 +163,8 @@ export default function RegistrationContainer() {
                     value={registrationState.passwordInput}
                     onChange={handleChange}
                     required 
-                    minlength="3"
-                    maxlength="16"
+                    minLength="3"
+                    maxLength="16"
                 /> 
                   </div>  
                   <div className="mb-6">

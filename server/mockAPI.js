@@ -235,9 +235,10 @@ function deleteEntry(username, entryID) {
     if (!(userToBeUpdated instanceof Error)) {
         //Delete entry
         userToBeUpdated.entries = userToBeUpdated.entries.filter((entry) => 
-            entry.entryId !== entryID
+            entry.entryId !== parseInt(entryID)
         );
-        return 0; //No error. This is used in error checking
+        //No error. EntryId of the deleted entry is returned.
+        return entryID; 
     } else {
         return new Error(`Error: User with username ${username} not found`);
     }
