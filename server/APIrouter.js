@@ -9,6 +9,7 @@ const { getUser,
         loginUser,
         updateUser,
         createUser,
+        createUser2,
         deleteUser,
         getAllEntries,
         addEntry,
@@ -170,6 +171,29 @@ APIrouter.post('/createUser/:username',
             res.status(201).send(createdUser);
         }
         res.status(404).send(createdUser.message);
+    } catch (error) {
+        console.log("500: Internal server error - " + error.message);
+        res.status(500).send(error.message);
+    }
+});
+APIrouter.post('/createUser2', 
+               [],
+               async (req, res, next) => {
+    /*  There is a bug here when: if there 2 create requests made one after another, both with the exact same data,
+        there will be an error and the server shuts down.
+        Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    */
+
+    // // Check for body errors (Data validation)
+    // const validationErrors = validationResult(req);
+    // if(!validationErrors.isEmpty()) {
+    //     // Send Bad Request Response with the error codes of the validation.
+    //     return res.status(400).send({errors: validationErrors.array()});
+    // }
+
+    try {
+        const newUser = await createUser2()
+        res.status(200).json({ message: 'ok', data: newUser });
     } catch (error) {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);

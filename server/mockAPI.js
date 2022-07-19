@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt"); //import the bcrypt library for hashing functi
 //Import mockData 
 var USERS = require("./mockData"); //This can not be a const or else there will be an error with delete requests.
 
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+
 // THESE ARE JUST MOCK API FUNCTIONS FOR TESTING AND SHOULD BE REPLACED BY REAL ONES
 
 // API FUNCTIONS
@@ -151,6 +154,29 @@ async function createUser(username, newUserData) {
     }
 }
 
+
+async function createUser2(username, newUserData) {
+  // Connect the client
+  await prisma.$connect()
+
+  await prisma.user.create({
+    data: {
+      userId: 2,
+      name: "Elder Gnome",
+      username: "elderGnome",
+      email: "eldergnome@example.com",
+      password: "$2b$10$3lxOLSkbLYe3QP/ro2TZieBay3hq/.RcFWxEFC4/Dh1gVoedQLH1u", //"HAHAHAHA"
+      age: 99,
+      lastLogin: "01-05-2022",
+      isLoggedIn: false,
+    }
+  })
+
+  const allUsers = await prisma.user.findMany()
+  console.dir(allUsers, { depth: null })
+  return allUsers
+}
+
 // Delete a user by username
 function deleteUser(username) {
     USERS = USERS.filter((user) => 
@@ -254,6 +280,7 @@ module.exports =
     loginUser,
     updateUser,
     createUser,
+    createUser2,
     deleteUser,
     getAllEntries,
     getEntry,

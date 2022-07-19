@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
   userId     Int
   name       String
   username   String
   email      String
   password   String
   age        Int
-  lastLogin  DateTime
+  lastLogin  String
+  // lastLogin  DateTime
   isLoggedIn Boolean // this should not persist, should be on the client/mb server
   entries    Entry[]
 }
