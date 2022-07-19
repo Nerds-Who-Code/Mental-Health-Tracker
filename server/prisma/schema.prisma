@@ -12,10 +12,10 @@ datasource db {
 
 model User {
   id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId     Int
+  userId     Int     @unique // will make unique for now, later will deprecate
   name       String
   username   String
-  email      String
+  email      String  @unique
   password   String
   age        Int
   lastLogin  String
@@ -26,7 +26,7 @@ model User {
 
 model Entry {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  entryId Int
+  entryId Int      @unique
   date    DateTime
   type    String
   level   Int
