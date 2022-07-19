@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     Int
+  name       String
+  username   String
+  email      String
+  password   String
+  age        Int
+  lastLogin  DateTime
+  isLoggedIn Boolean // this should not persist, should be on the client/mb server
+  entries    Entry[]
+}
+
+model Entry {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  entryId Int
+  date    DateTime
+  type    String
+  level   Int
+  event   String[]
+  notes   String
+  User    User?    @relation(fields: [userId], references: [id])
+  userId  String?  @db.ObjectId
+}
+
+// {
+//   userId: 2,
+//   name: "Elder Gnome",
+//   username: "elderGnome",
+//   email: "eldergnome@example.com",
+//   password: "$2b$10$3lxOLSkbLYe3QP/ro2TZieBay3hq/.RcFWxEFC4/Dh1gVoedQLH1u", //"HAHAHAHA"
+//   age: 99,
+//   lastLogin: "01-05-2022",
+//   isLoggedIn: false,
+//   entries: [
+//       {
+//           entryId: 0,
+//           date: "30-04-2022",
+//           type: "stress",
+//           level: 6,
+//           event: ["work"],
+//           notes: "Too much coding."
+//       },
+//       {
+//           entryId: 1,
+//           date: "01-05-2022",
+//           type: "anxiety",
+//           level: 8,
+//           event: ["family"],
+//           notes: "Family is visiting."
+//       }
+//   ]
+// }
