@@ -72,10 +72,6 @@ export default function RegistrationContainer() {
         let userData = {};
         // If the form is valid
         if(isFormValid) {
-
-            // NOT ENTIRELY SURE YET HOW TO IMPLEMENT THIS..
-            // ADVICE WOULD BE APPRECIATED
-
             //Transform the user inputs to the user data
             //The userId will be generated on the server.
             userData = {
@@ -97,7 +93,6 @@ export default function RegistrationContainer() {
 
             alert("Form is not valid.")
         }
-
         //Registration code (send info to Back-end database)
         try {
             //Ask the server to add a new user to the database || // eslint-disable-next-line
@@ -143,6 +138,7 @@ export default function RegistrationContainer() {
                     value={registrationState.userNameInput}
                     onChange={handleChange}
                     required 
+
                     minlength="3"
                     maxlength="25"
                     pattern="[a-zA-Z0-9]+"
@@ -186,7 +182,8 @@ export default function RegistrationContainer() {
                     value={registrationState.ageInput}
                     onChange={handleChange}
                     required 
-                    min="1" max="125"
+                    min="1" 
+                    max="125"
                 /> 
                </div>
                 <input  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

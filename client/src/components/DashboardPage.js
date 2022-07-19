@@ -1,18 +1,35 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from 'react-redux';
+import {logoutUser} from '../store';
 
 export default function DashboardPage() {
-    const [name, setName] = useState('');
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const userDataGlobalState = useSelector(state => state.userData.userInfo);
+    const [name, setName] = useState("Your name should be here.");
 
-    // Load username (from database) when the component mounts
-    // Not complete yet
+    // Check if the user is logged in. If not send them back to the dashboard.
+    // This prevents people from manually typing in /dashboard in the url without logging in.
+    // Prevent bypassing login.
     useEffect( () => {
-        setName("Your should be username here");
+        //Check if user data in global state is empty.
+        if(JSON.stringify(userDataGlobalState) === '{}') {
+            alert("Login required!");
+            navigate("/");
+        }
     }, []);
 
-    //Log out code
+    // Load username from global state when the component mounts
+    useEffect( () => {
+        setName(userDataGlobalState.name);
+    }, [userDataGlobalState.name]);
+
+    // Log out code
     const logOut = () => {
-        //Add log out code here
+        dispatch(logoutUser(userDataGlobalState.username));
+        // Navigate back to the main page.
+        navigate("/");
     }
 
     return (

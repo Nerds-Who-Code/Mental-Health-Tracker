@@ -1,8 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import axios from 'axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginUser} from '../store';
 
 export default function LoginContainer() {
+    //Used for navigating to different routes in the client without buttons
+    const navigate = useNavigate();
+    //Used for dispatching actions to the global state (store.js).
+    const dispatch = useDispatch();
+    //Get the userData from the global state
+    const userDataGlobalState = useSelector(state => state.userData);
 
     //Used for navigating to different routes in the client without buttons
     const navigate = useNavigate();
@@ -31,30 +38,35 @@ export default function LoginContainer() {
         });
     };
 
-    //Login authorization
+    //This will listen if the the global state has updated.
+    //Depending on the status of the global state triggered by a dispatch from the login button
+    //Login will happen or not.
+    useEffect(() => {
+        if(userDataGlobalState.status === "success") {
+            // Succesful Login
+            if (userDataGlobalState.userInfo.isLoggedIn === true) {
+                // Go to the dashboard after authorization is success (dont forget to replace the url with a real production url)
+                navigate("/dashboard");
+            }
+        } else if (userDataGlobalState.userInfo.isLoggedIn === false || 
+            userDataGlobalState.status === "failed") {
+                // Failed login (Error 404 response from server)
+                // This error happens if:
+                // 1. Server can not be reached.
+                // 2. User with that username is not found.
+                // 3. User is found, but password does not match the password of the user.
+                alert("Your username or password is wrong");
+            }
+    }, [userDataGlobalState]);
+
+    //Login authorization code
     const authorize = async (e) => {
         //prevents the browser from performing its default behavior when a form is submitted.
         //prevent page from refreshing
         e.preventDefault();
-
-        //Login authorization code
-        try {
-            //Ask the server to login the user. See /server/APIrouter.js and /server/mockAPI.js to see how this works.  || // eslint-disable-next-line
-            let response = await axios.put(`http://localhost:3001/api/loginUser/${loginContainerState.userNameInput}`,
-                {password: loginContainerState.passwordInput});
-                    
-                                    //alert("password is correct");
-            //Succesful Login
-            //Go to the dashboard after authorization is success (dont forget to replace the url with a real production url)
-            navigate("/dashboard");
-        } catch (error) {
-            //Failed login (Error 404 response from server)
-            //This error happens if:
-            // 1. Server can not be reached.
-            // 2. User with that username is not found.
-            // 3. User is found, but password does not match the password if the user.
-            alert("Your username or password is wrong");
-        }
+      
+        //Retrieve the user data from the server and store it in the global state. See store.js for how this happens.
+        dispatch(loginUser({username: loginContainerState.userNameInput, password: loginContainerState.passwordInput}));
     };
 
     return (
@@ -93,7 +105,6 @@ export default function LoginContainer() {
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Log in">
                         Log In
                     </button>
-                    
                 </div>
             </form>
             <a className="my-2 align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
@@ -103,5 +114,6 @@ export default function LoginContainer() {
             <Link className="my-4 hover:text-cyan-500" to="/register">Create a new account</Link>
         </div>
     );
+
 }
 
