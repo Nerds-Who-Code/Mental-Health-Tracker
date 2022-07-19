@@ -18,9 +18,9 @@ const router = express.Router();
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-//You can set the environment variable DEVMODE to either false or true. It defaults to false if its not set.
-//Initialize the DEVMODE with the bash command: DEVMODE=true node index.js 
-var isDevelopmentMode = process.env.DEVMODE || false;
+//You can set the environment variable NODE_ENV to either "production" or "development". It defaults to "development" if its not set.
+//Initialize the NODE_ENV with the bash command: NODE_ENV="development" node index.js 
+var MODE = process.env.NODE_ENV || "development";
 
 /**
  * Normalize a port into a number, string, or false.
@@ -72,8 +72,8 @@ app.listen(port, () => {
     console.log(`Starting server...`);
     console.log(`${defaultPortWarning()}`);
     console.log(`ExpressJS server started...`);
-    console.log(`Development mode: ${isDevelopmentMode}`);
-    console.log(`Listening on "http://localhost" on port: ${port}...`)
+    console.log(`Mode: ${MODE}`);
+    console.log(`Listening on "http://localhost:${port}"...`);
     console.log("------------"); 
     console.log(`Use CTRL+C to stop the server...`);
   });

@@ -13,6 +13,16 @@ To change the port of the server run:
 
 It is reccomended to use port 3001 so that the react client can run on port 3000. 
 If both the server and client run on the same port there is going to be an error.
+Open [http://localhost:3001/api](http://localhost:3001/api) to view it in your browser.
+
+## Start the server with a file
+
+You can start the server by executing the BASH script called start_server.sh with the command.
+This will automatically start the server on port 3001.
+
+### `./start_server.sh`
+
+You may first need to make the bash script executable with the command `chmod u+x start_server.sh`
 
 ## Server does not work with the browser
 
