@@ -181,10 +181,13 @@ export default function RegistrationContainer() {
                     max="125"
                 /> 
                </div>
-                <input  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+               <div className="flex flex-col items-center justify-between">
+                
+                <input className="formButton"
                     type="submit" 
                     value="Sign up" 
                 />
+                </div>
             </form>
             <div className="my-4 hover:text-cyan-500"><Link to="/">Go back</Link></div>
         </div>

@@ -13,10 +13,25 @@
       @apply bg-gradient-to-b from-cyan-200 to-blue-200;
       @apply h-screen;
     }
-    input {
-      @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none;
+    input[type=text], input[type=password], input[type=email], input[type=number] {
+      @apply shadow appearance-none border rounded w-full py-2 px-3 text-stone-900 leading-tight focus:outline-none;
+    }
+    input[type=radio] {
+      @apply w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2;           
+    }
+    input[type=checkbox] {
+      @apply w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2;       
     }
     label {
-      @apply block text-gray-700 text-sm font-bold mb-2;
+      @apply ml-2 text-sm font-medium text-stone-900 block;
     }
+    
+    .formButton {
+      @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none;
+    }
+    
+    div.checkboxInput, div.radioInput {
+      @apply flex items-center mb-4;
+    }
+    
   }
