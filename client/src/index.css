@@ -20,3 +20,36 @@
       @apply block text-gray-700 text-sm font-bold mb-2;
     }
   }
+
+.dashboard-title {
+  font-family: "Raleway" sans-serif;
+  font-weight: 700;
+}
+
+.dashboard-message {
+  font-family: "Raleway" sans-serif;
+  font-weight: 400;
+}
+
+.content-font {
+  font-family: "Lora" sans-serif;
+}
+
+.content-font h2 {
+  font-weight: 700;
+  font-size: 1.8em;
+}
+
+.entry-label {
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+.landing-font {
+  font-family: "Roboto" sans-serif;
+  font-weight: 300;
+}
+
+.landing-font h2 {
+  font-weight: 500;
+}

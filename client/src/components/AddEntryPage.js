@@ -38,7 +38,7 @@ export default function AddEntryPage() {
     };
 
     return (
-        <div>
+        <div className="content-font">
             <h2>{entryState.type} Tracker</h2>
             <form action="#" onSubmit={addNewEntry}>
                 <div>
@@ -76,7 +76,7 @@ export default function AddEntryPage() {
                     </label>
                 </div>
                 <br />
-                <label>On a scale of 1 to 10, one meaning "little to none" <br /> and 10 meaning "extreme" how was your {entryState.type.toLowerCase()} level today?</label>
+                <label className="entry-label">On a scale of 1 to 10, one meaning "little to none" <br /> and 10 meaning "extreme" how was your {entryState.type.toLowerCase()} level today?</label>
                 <br />
                 <input 
                     type="range"
@@ -89,7 +89,7 @@ export default function AddEntryPage() {
                 />
                 <span>{entryState.level}</span>
                 <br />
-                <label>Did anything in particular contribute to your elevated level of {entryState.type.toLowerCase()}?</label>
+                <label className="entry-label">Did anything in particular contribute to your elevated level of {entryState.type.toLowerCase()}?</label>
                 <br />
                 <input 
                     type="checkbox"
@@ -139,7 +139,7 @@ export default function AddEntryPage() {
                 />
                 <label>I am not sure.</label>
                 <br />
-                <label>Notes for today's entry (optional):</label>
+                <label className="entry-label">Notes for today's entry (optional):</label>
                 <br />
                 <input
                     type="textarea"
