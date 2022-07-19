@@ -22,17 +22,6 @@ export default function LandingPage() {
         <div>
             {/**<HeaderImage />*/}
             <LoginContainer />
-        
-            <div className="landigPageContent">
-                <h1 className="landingPageTitle">Let us help you take care of you</h1>
-                <p>Wanna try out our App?</p>
-                <img 
-                    className="demoImage" 
-                    src={demoImage}
-                    alt="mental health tracking app demo image" 
-                    width="150" 
-                    height="150" />            
-            </div>
         </div>
     );
 }

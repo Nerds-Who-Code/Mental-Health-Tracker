@@ -177,7 +177,7 @@ export default function RegistrationContainer() {
                     value={registrationState.ageInput}
                     onChange={handleChange}
                     required 
-                    min="1"
+                    min="1" 
                     max="125"
                 /> 
                </div>
