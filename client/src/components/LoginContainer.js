@@ -3,7 +3,6 @@ import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../store';
 
-
 export default function LoginContainer() {
     //Used for navigating to different routes in the client without buttons
     const navigate = useNavigate();
@@ -102,7 +101,6 @@ export default function LoginContainer() {
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Log in">
                         Log In
                     </button>
-                    
                 </div>
             </form>
             <a className="my-2 align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
@@ -112,5 +110,6 @@ export default function LoginContainer() {
             <Link className="my-4 hover:text-cyan-500" to="/register">Create a new account</Link>
         </div>
     );
+
 }
 

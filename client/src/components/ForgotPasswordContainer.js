@@ -20,6 +20,7 @@ export default function ForgotPasswordContainer() {
     };
 
     return (
+    <br />
         <div className="flex flex-col items-center justify-center h-screen">
             <h1 className="my-4">Password reset</h1>
             <form className="flex flex-col items-center justify-center" action="#" onSubmit={passwordReset}>
