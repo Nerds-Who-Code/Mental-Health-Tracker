@@ -110,8 +110,8 @@ export default function RegistrationContainer() {
             <h1 className="my-2">Create a new account</h1>
             <h3 className="my-2">Already registered? <Link className="my-4 hover:text-cyan-500" to="/">Login here</Link></h3>
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={register}>
-            <div class="mb-4">
-                <label for="nameInput">Name</label>
+            <div className="mb-4">
+                <label htmlFor="nameInput">Name</label>
                 <input 
                     type="text"
                     id="nameInput"
@@ -124,8 +124,8 @@ export default function RegistrationContainer() {
                     maxLength="50"
                 />
             </div>
-            <div class="mb-6">
-                <label for="userNameInput">Username</label>
+            <div className="mb-6">
+                <label htmlFor="userNameInput">Username</label>
                 <input 
                     type="text"
                     id="userNameInput"
@@ -139,8 +139,8 @@ export default function RegistrationContainer() {
                     pattern="[a-zA-Z0-9]+"
                 />
             </div>
-            <div class="mb-6">
-                <label for="emailInput">Email</label>
+            <div className="mb-6">
+                <label htmlFor="emailInput">Email</label>
                 <input 
                     type="email"
                     id="emailInput"
@@ -154,7 +154,7 @@ export default function RegistrationContainer() {
                 />
              </div>  
              <div className="mb-6">
-                <label for="passwordInput">Password</label>
+                <label htmlFor="passwordInput">Password</label>
                 <input 
                     type="password"
                     id="passwordInput"
@@ -168,7 +168,7 @@ export default function RegistrationContainer() {
                 /> 
                   </div>  
                   <div className="mb-6">
-                <label for="ageInput">Age</label>
+                <label htmlFor="ageInput">Age</label>
                 <input 
                     type="number"
                     id="ageInput"
@@ -186,7 +186,7 @@ export default function RegistrationContainer() {
                     value="Sign up" 
                 />
             </form>
-            <a className="my-4 hover:text-cyan-500"><Link to="/">Go back</Link></a>
+            <div className="my-4 hover:text-cyan-500"><Link to="/">Go back</Link></div>
         </div>
     );
 }

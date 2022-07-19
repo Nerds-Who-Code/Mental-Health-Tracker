@@ -71,7 +71,7 @@ export default function LoginContainer() {
              
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={authorize}>
                 <div className="mb-4">
-                    <label for="userNameInput">
+                    <label htmlFor="userNameInput">
                         Username
                     </label>
                     <input 
@@ -84,7 +84,7 @@ export default function LoginContainer() {
                     />
                 </div>
                 <div className="mb-6">
-                    <label for="passwordInput">
+                    <label htmlFor="passwordInput">
                         Password
                     </label>
                     <input 
@@ -103,9 +103,9 @@ export default function LoginContainer() {
                     </button>
                 </div>
             </form>
-            <a className="my-2 align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+            <div className="my-2 align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
                 <Link to="/forgot-password">Forgot password?</Link>
-            </a>
+            </div>
             
             <Link className="my-4 hover:text-cyan-500" to="/register">Create a new account</Link>
         </div>
