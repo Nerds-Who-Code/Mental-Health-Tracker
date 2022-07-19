@@ -190,6 +190,17 @@ var USERS = [
         ]
     },
     {
+        userId: 777,
+        name: "No Entries",
+        username: "noentry",
+        email: "noentry@example.com",
+        password: "$2b$10$VzQhCKrOjYr.KSLQYfLB0.CnP3.SkCd/eN37xyvtdJmaTHalK.Bi6", //"test"
+        age: 77,
+        lastLogin: "07-07-2022",
+        isLoggedIn: false,
+        entries: []
+    },
+    {
         userId: 101,
         name: "DOOM",
         username: "doom123",

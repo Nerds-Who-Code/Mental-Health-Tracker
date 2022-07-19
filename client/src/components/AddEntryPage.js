@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
-import {Link, useNavigate} from "react-router-dom"; // eslint-disable-next-line
+import {useDispatch, useSelector} from 'react-redux';
+import {Link, useNavigate} from "react-router-dom";
+import {addEntry} from '../store';
 
 export default function AddEntryPage() {
-
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const username = useSelector(state => state.userData.userInfo.username);
 
-    //Values of all the input boxes
+    // Values of all the input boxes
+    // The values here are the default initialized values. (initial state)
     const [entryState, setEntryState] = useState({
         type: "Stress",
         level: 1,
@@ -13,9 +17,9 @@ export default function AddEntryPage() {
         note: "Your note here..."
     });
 
-    //Handles changes in the input boxes (Saves user input to the React State manager)
-    //e is the event that is accociated with the input box that the user is inputting/using
-    //make sure to keep the name attribute of html element the same as the key in state object
+    // Handles changes in the input boxes (Saves user input to the React State manager)
+    // e is the event that is accociated with the input box that the user is inputting/using
+    // make sure to keep the name attribute of html element the same as the key in state object
     const handleChange = (e) => {
         //const value = evt.target.type === "checkbox" ? e.target.checked : e.target.value;
         const value = e.target.value;
@@ -25,14 +29,26 @@ export default function AddEntryPage() {
         });
     };
 
-    //Send entry data to the database
+    // Send entry data to the database
     const addNewEntry = (e) => {
         //prevent page from refreshing
         e.preventDefault();
-        
-        //Add the entry to the user database
-        //addEntry(username, entry);
 
+        // Transform the user inputs to the entry data
+        // The entryId and date will be generated on the server.
+        let entryData = {
+            entryId: 0,
+            date: "0000-00-00",
+            type: entryState.type,
+            level: entryState.level,
+            event: entryState.event,
+            notes: entryState.note
+        };
+
+        //Dispatch action to the global state to tell the server to add the new entry.
+        dispatch(addEntry({username: username, entry: entryData}));
+
+        alert("Your new entry has been added.");
         //Send user back to the dashboard after entry submit
         navigate("/dashboard");
     };

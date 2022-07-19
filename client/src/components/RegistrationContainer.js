@@ -89,11 +89,11 @@ export default function RegistrationContainer() {
         } else {
             alert("Form is not valid.")
         }
+        
         //Registration code (send info to Back-end database)
         try {
             //Ask the server to add a new user to the database || // eslint-disable-next-line
             let createdUser = await axios.post(`http://localhost:3001/api/createUser/${registrationState.userNameInput}`, {user: userData});
-            console.log(createdUser);
             
             alert("successfully registered");
             //Send user back to the landing page after registration submit

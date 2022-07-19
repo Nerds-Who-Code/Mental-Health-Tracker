@@ -191,6 +191,14 @@ function addEntry(username, entry) {
     let userToBeUpdated = getUser(username);
     //First check getUser does NOT return an error
     if (!(userToBeUpdated instanceof Error)) {
+        // First Generate a unique entry ID
+        entry.entryId = Math.floor(Math.random() * 10000);
+        // Set the submit date of the entry to current date
+        let today = new Date();
+        //Date format: YYYY-MM-DD or Year-Month-Day
+        let dateToStr = (today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
+        entry.date = dateToStr;
+        // Add entry to database.
         userToBeUpdated['entries'].push(entry);
         return entry;
     }

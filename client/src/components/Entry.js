@@ -4,6 +4,10 @@ export default function Entry(props) {
 
     //This should be styled like a card.
 
+    /* There is a bug here where if the events are more than 1,
+        it displays "Unknown"
+    */
+
     return (
         <div className="entryCard">
             <h4>Date Created: {props.entryInfo.date}</h4>
