@@ -87,10 +87,6 @@ export default function RegistrationContainer() {
             };
         // If the form is not valid
         } else {
-
-            // NOT ENTIRELY SURE YET HOW TO IMPLEMENT THIS...
-            // ADVICE WOULD BE APPRECIATED
-
             alert("Form is not valid.")
         }
         //Registration code (send info to Back-end database)
@@ -138,7 +134,6 @@ export default function RegistrationContainer() {
                     value={registrationState.userNameInput}
                     onChange={handleChange}
                     required 
-
                     minlength="3"
                     maxlength="25"
                     pattern="[a-zA-Z0-9]+"

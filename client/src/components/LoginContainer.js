@@ -11,9 +11,6 @@ export default function LoginContainer() {
     //Get the userData from the global state
     const userDataGlobalState = useSelector(state => state.userData);
 
-    //Used for navigating to different routes in the client without buttons
-    const navigate = useNavigate();
-
     /*
         You can use any account in mockData.js to login. Just use the values of username and password.
         The easiest account to login is:
@@ -64,7 +61,6 @@ export default function LoginContainer() {
         //prevents the browser from performing its default behavior when a form is submitted.
         //prevent page from refreshing
         e.preventDefault();
-      
         //Retrieve the user data from the server and store it in the global state. See store.js for how this happens.
         dispatch(loginUser({username: loginContainerState.userNameInput, password: loginContainerState.passwordInput}));
     };

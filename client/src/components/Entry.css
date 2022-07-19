@@ -1,0 +1,10 @@
+.entryCard {
+    border: 2px solid black;
+    background-color: rgba(0, 0, 0, 0.35);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    max-width: 25%;
+    word-wrap: break-word;
+    box-shadow: inset 1px 0px 15px 10px rgba(0,0,0,0.15);
+}

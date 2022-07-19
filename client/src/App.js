@@ -18,7 +18,6 @@ console.log("Multiple Reacts installed? " + window.React1 === window.React2);
 */
 // ================================
 
-
 //This is the global component
 
 function App() {
