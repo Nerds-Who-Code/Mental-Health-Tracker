@@ -33,7 +33,6 @@ export default function AddEntryPage() {
      checkedPosition is the index of the checkboxes
     */
     const handleChange = (e, checkedPosition=0) => {
-        
         // Handle the checkboxes.
         if (e.target.name === "event") {
             // Checks or unchecks each checkbox and maps it to an array of booleans.
@@ -41,17 +40,6 @@ export default function AddEntryPage() {
                 index === checkedPosition ? !checkBoxState : checkBoxState
             );
             setIsCheckedEventsArray(updatedIsCheckedEventsArray);
-            
-            //let indexAttr = e.target.getAttribute('index');
-
-            console.log("==================================");
-            console.log("BEFORE");
-            console.log(updatedIsCheckedEventsArray)
-            console.log(e.target.name);
-            console.log("events:");
-            console.log(events);
-            //console.log(indexAttr);
-            //console.log(parseInt(indexAttr));
 
             // Transforms the array of booleans of the checkboxes to an array with values for each event.
             // checkBoxState is equal to the value of each item of boolean array
@@ -59,7 +47,6 @@ export default function AddEntryPage() {
             updatedIsCheckedEventsArray.forEach( (checkBoxState, index) => {
                 // Explicitly checking for true value to not make myself confused.
                 // same as if(checkBoxState) {}
-                console.log("index: " + index);
                 if (checkBoxState === true) {
                     // Each index corresponds to the checked or unchecked state of each of the 6 checkboxes.
                     switch(index) {
@@ -89,14 +76,6 @@ export default function AddEntryPage() {
                     events[index] = null;
                 }
             });
-
-            console.log("==================================");
-            console.log("AFTER");
-            console.log(updatedIsCheckedEventsArray)
-            console.log(e.target.name);
-            console.log("events:");
-            console.log(events);
-            
             // Set the event variable equal to the events array.
             setEntryState({
                 ...entryState,
@@ -215,77 +194,16 @@ export default function AddEntryPage() {
                 
                 <label className="py-4">Did anything in particular contribute to your elevated level of {entryState.type.toLowerCase()}?</label>
                 
-                <div className="checkboxInput">
-                <input 
-                    index="0"
-                    type="checkbox"
-                    name="event" 
-                    value="family"
-                    checked={isCheckedEventsArray[0]}
-                    onChange={(e) => handleChange(e, 0)} 
-                />
-                <label>Family problem</label>
-                </div>
-
-            <div className="checkboxInput">
-                <input 
-                    index="1"
-                    type="checkbox"
-                    name="event" 
-                    value="relationship"
-                    checked={isCheckedEventsArray[1]}
-                    onChange={(e) => handleChange(e, 1)}  
-                />
-                <label>Relationship problem</label>
-            </div> 
-
-            <div className="checkboxInput">
-                <input 
-                    index="2"
-                    type="checkbox"
-                    name="event" 
-                    value="work"
-                    checked={isCheckedEventsArray[2]}
-                    onChange={(e) => handleChange(e, 2)}
-                />
-                <label>School or work</label>
-            </div>
-
-            <div className="checkboxInput">
-                <input 
-                    index="3"
-                    type="checkbox"
-                    name="event" 
-                    value="significant"
-                    checked={isCheckedEventsArray[3]}
-                    onChange={(e) => handleChange(e, 3)}
-                />
-                <label>Significant life event</label>
-            </div>
-
-            <div className="checkboxInput">
-                <input 
-                    index="4"
-                    type="checkbox"
-                    name="event" 
-                    value="trauma"
-                    checked={isCheckedEventsArray[4]}
-                    onChange={(e) => handleChange(e, 4)}
-                />
-                <label>A traumatic event</label>
-                </div> 
-
-                <div className="checkboxInput">
-                <input 
-                    index="5"
-                    type="checkbox"
-                    name="event" 
-                    value="unknown"
-                    checked={isCheckedEventsArray[5]}
-                    onChange={(e) => handleChange(e, 5)}
-                />
-                <label>I am not sure</label>
-                </div>
+                {[0,1,2,3,4,5].map((index) => 
+                    <div className="checkboxInput" key={index}>
+                        <input 
+                            type="checkbox"
+                            name="event" 
+                            checked={isCheckedEventsArray[index]}
+                            onChange={(e) => handleChange(e, index)} 
+                        />
+                        <label>{checkBoxLabels[index]}</label>
+                    </div>)}
                 
                 <label>Notes for today's entry (optional):</label>
 
