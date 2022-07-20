@@ -13,6 +13,7 @@ export default function Entry(props) {
     };
 
     return (
+
         <div className="px-4 py-4 odd:bg-white even:bg-blue-100" >
             
                 <span className="entryDate inline-block w-28 px-2">{props.entryInfo.date}</span>
@@ -25,7 +26,9 @@ export default function Entry(props) {
                 <button className="entryEditButton inline-block w-6 px-2">✏️</button>
                 <button className="entryDeleteButton inline-block w-8 px-2" onClick={deleteEntryOnClick}>🗑️</button>
                  
+
         </div>
     )
 }
+
 
