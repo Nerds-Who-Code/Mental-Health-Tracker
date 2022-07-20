@@ -18,15 +18,11 @@ export default function Entry(props) {
             <hr />
             <p><strong>Type: </strong>{props.entryInfo.type}</p>
             <p><strong>Level: </strong>{props.entryInfo.level}</p>
-            <p><strong>Events: </strong> 
-            {props.entryInfo.event.filter(item => item !== null).map((item, index) => 
-                <span key={index}>{`${item}, `}</span>)}
-            </p>
+            <p><strong>Events: </strong> {props.entryInfo.event.filter(item => item !== null).join(", ")}</p>
             <p><strong>Notes: </strong>{props.entryInfo.notes}</p>
             <button>Edit</button>
             <button onClick={deleteEntryOnClick}>Delete</button>
         </div>
     )
 }
-
 
