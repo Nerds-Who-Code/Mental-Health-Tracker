@@ -89,6 +89,14 @@ export default function AddEntryPage() {
                     events[index] = null;
                 }
             });
+
+            console.log("==================================");
+            console.log("AFTER");
+            console.log(updatedIsCheckedEventsArray)
+            console.log(e.target.name);
+            console.log("events:");
+            console.log(events);
+            
             // Set the event variable equal to the events array.
             setEntryState({
                 ...entryState,
