@@ -7,7 +7,7 @@ export default function EntryOverViewPage() {
     return (
         <div>
             <h1>Your Mental Health Overview</h1>
-            <p>{entries}</p>
+            <div>{entries}</div>
             <Link to="/dashboard"><button>Go back to dashboard</button></Link>
         </div>
     )
