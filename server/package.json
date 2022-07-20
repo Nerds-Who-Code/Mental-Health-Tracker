@@ -4,7 +4,7 @@
   "description": "mental-health-tracker-back-end",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "clear && PORT=3001 nodemon index.js"
   },
   "author": "Nerds Who Code",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "express-validator": "^6.14.2"
   },
   "devDependencies": {
+    "nodemon": "^2.0.19",
     "prisma": "^4.1.0"
   }
 }
