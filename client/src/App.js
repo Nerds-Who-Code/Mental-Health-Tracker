@@ -1,6 +1,8 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
 import React from 'react';
+import MainNavbar from './components/MainNavbar';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // ================================
 /*
@@ -11,6 +13,7 @@ import React from 'react';
   To test this
   Uncomment the code below and add window.React1 = require('react'); to /node_modules/react-dom/index.js
 */
+// Do not delete this code please.
 /*
 require('react-dom');
 window.React2 = require('react');
@@ -18,7 +21,7 @@ console.log("Multiple Reacts installed? " + window.React1 === window.React2);
 */
 // ================================
 
-//This is the global component
+// This is the global component
 
 function App() {
 
@@ -30,6 +33,9 @@ function App() {
 
   return (
       <div className="App">
+        <ErrorBoundary>
+          <MainNavbar />
+        </ErrorBoundary>
         <Outlet />
       </div>
   );
