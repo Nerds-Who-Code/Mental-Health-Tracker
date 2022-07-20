@@ -19,8 +19,14 @@ function getAllUSERS() {
     return USERS;
 }
 
-// Get a single user by username
-function getUser(username) {
+/**
+ * Get a single user by username
+ * 
+ * @deprecated old API
+ * @param {*} username 
+ * @returns 
+ */
+function getUser_deprecated(username) {
     const foundUser = USERS.find((user) => 
         user.username === username
         );
@@ -28,6 +34,34 @@ function getUser(username) {
         //User is found.
         return foundUser;
     }
+    return new Error(`Error: User with username ${username} not found`);
+}
+
+/**
+ * Get a single user by username
+ * 
+ * @deprecated old API
+ * @param {string} username 
+ * @returns {Promise{Error | Object}}
+ */
+async function getUserByUsername(username) {
+    const foundUser = await prisma.user.findFirst({ where: { username }})
+    // console.log(`getUser2: ${username}, foundUser: ${foundUser}`)
+    if (foundUser) return foundUser
+
+    /**
+     * @note 
+     * Considering 'returning vs throwing' an Error I would throw.
+     * The reason being that the caller expects a binary result - 
+     * we either found the user with this username or we did not.
+     * Therefore the simplest is to ensure that the returned value 
+     * is either an Object or definite lack thereof (null). 
+     * 
+     * The caller also expects to catch any thrown Errors with trycatch. 
+     * 
+     * Therefore we are better off returning a null here and API handler
+     * will respond to the client saying that 'null came back ==> no user found'.
+     */
     return new Error(`Error: User with username ${username} not found`);
 }
 
@@ -49,8 +83,8 @@ function getUserById(id) {
     */
 // Get a single user by username AND password
 // Only returns userdata if both username and password match
-function getUserByPasswd(username, password) {
-    const foundUser = getUser(username);
+async function getUserByPasswd(username, password) {
+    const foundUser = await getUserByUsername(username);
     //User not found
     if (foundUser instanceof Error) {
         //We won't tell specifically if the username was found or not, or if the password was incorrect.
@@ -68,7 +102,7 @@ function getUserByPasswd(username, password) {
 // Only returns userdata if both username and password match
 // And sets the isLoggedIn flag of the user to true.
 async function loginUser(username, password) {
-    const foundUser = getUser(username);
+    const foundUser = await getUserByUsername(username);
     //User not found
     if (foundUser instanceof Error) {
         //We won't tell specifically if the username was found or not, or if the password was incorrect.
@@ -100,8 +134,8 @@ async function loginUser(username, password) {
 }
 
 // Change the value of key of user with 'username'
-function updateUser(username, prop, value) {
-    let userToBeUpdated = getUser(username);
+async function updateUser(username, prop, value) {
+    let userToBeUpdated = await getUserByUsername(username);
     //First check getUser does NOT return an error
     if (!(userToBeUpdated instanceof Error)) {
         //Check if the user has the property that needs to be updated
@@ -126,9 +160,15 @@ function updateUser(username, prop, value) {
 
 // Create a new user
 // newUserData is an object
-async function createUser(username, newUserData) {
+/**
+ * @deprecated old API
+ * @param {*} username 
+ * @param {*} newUserData 
+ * @returns 
+ */
+async function createUser_deprecated(username, newUserData) {
     //First check if user with that username already exists
-    const foundUser = getUser(username);
+    const foundUser = await getUserByUsername(username);
     if (!(foundUser instanceof Error)) {
         return new Error(`Error: This user with username ${username} already exists`);
     } else {
@@ -154,32 +194,44 @@ async function createUser(username, newUserData) {
     }
 }
 
-
-async function createUser2(username, newUserData) {
-  // Connect the client
-  // await prisma.$connect()
-
-  // try {
-    await prisma.user.create({
-      data: {
-        userId: 2,
-        name: "Elder Gnome",
-        username: "elderGnome",
-        email: "eldergnome@example.com",
-        password: "$2b$10$3lxOLSkbLYe3QP/ro2TZieBay3hq/.RcFWxEFC4/Dh1gVoedQLH1u", //"HAHAHAHA"
-        age: 99,
-        lastLogin: "01-05-2022",
-        isLoggedIn: false,
+/**
+ * @todo Need to account for all unique User properties: username && email.
+ * @param {string} username 
+ * @param {Object} newUserData 
+ * @returns {Promise{Object}}
+ */
+async function createUser(username, newUserData) {
+  const foundUser = await getUserByUsername(username);
+  if (!(foundUser instanceof Error)) {
+      return new Error(`Error: user with username '${username}' already exists`);
+  } else {
+    // console.log(`createUser2: creating ${username} and ${JSON.stringify(newUserData)}`)
+      // Before adding the user to the database we need to first hash the password for security.
+      // Only the hash is stored in the user data. The plaintext password is never stored.
+      // When the user logs in it will check if the given plaitext password matches the hash stored in the database.
+      // See function loginUser for more info.
+      try {
+          // generate the salt. The default salt rounds is 10.
+          const salt = await bcrypt.genSalt(10);
+          // create the hash (convert plaintext password to a hash)
+          const hashedPassword = await bcrypt.hash(newUserData.password, salt);
+          // Replace the plaintext password of the user with their hashed version.
+          newUserData.password = hashedPassword;
+          // Generate a unique ID for each user.
+          newUserData.userId = Math.floor(Math.random() * 10000);
+          // Add the user to the database
+          // USERS.push(newUserData);
+          // console.log(`createUser2: ready to go: ${JSON.stringify(newUserData)}`)
+          const newUser = await prisma.user.create({
+            data: { ...newUserData, username }
+          })
+          // console.log(`createUser2: newUser created: ${newUser}`)
+          return newUser;
+      } catch (err) {
+        console.error(`[API] createUser2:\n${error} `)
+          return new Error(`Error: Cannot create user ${username} because something went wrong.`);
       }
-    })
-  
-    const allUsers = await prisma.user.findMany()
-    console.dir(allUsers, { depth: null })
-    return allUsers
-  // } catch (error) {
-  //   console.error(`[API] createUser2: ${JSON.stringify(error, null, 4)}`)
-  // }
-  
+  }
 }
 
 // Delete a user by username
@@ -192,9 +244,9 @@ function deleteUser(username) {
 // =============ENTRY FUNCTIONS==================
 
 // Get all entries from a user by username
-function getAllEntries(username) {
+async function getAllEntries(username) {
     //Find the user
-    let user = getUser(username);
+    let user = await getUserByUsername(username);
     //First check getUser does NOT return an error
     if (!(user instanceof Error)) {
         return user.entries;
@@ -203,9 +255,9 @@ function getAllEntries(username) {
 }
 
 // Get entry from a user by username and entryID
-function getEntry(username, entryID) {
+async function getEntry(username, entryID) {
     //Find the user
-    let user = getUser(username);
+    let user = await getUserByUsername(username);
     //First check getUser does NOT return an error
     if (!(user instanceof Error)) {
         //Find the entry
@@ -218,8 +270,8 @@ function getEntry(username, entryID) {
 }
 
 // Add entry to a user
-function addEntry(username, entry) {
-    let userToBeUpdated = getUser(username);
+async function addEntry(username, entry) {
+    let userToBeUpdated = await getUserByUsername(username);
     //First check getUser does NOT return an error
     if (!(userToBeUpdated instanceof Error)) {
         // First Generate a unique entry ID
@@ -237,9 +289,9 @@ function addEntry(username, entry) {
 }
 
 // Edit an entry by looking for EntryID and username
-function updateEntry(username, entryID, prop, value) {
+async function updateEntry(username, entryID, prop, value) {
     //Find the user
-    let userToBeUpdated = getUser(username);
+    let userToBeUpdated = await getUserByUsername(username);
     //First check getUser does NOT return an error
     if (!(userToBeUpdated instanceof Error)) {
         //Find the entry
@@ -260,8 +312,8 @@ function updateEntry(username, entryID, prop, value) {
 }
 
 // Delete entry from a user
-function deleteEntry(username, entryID) {
-    let userToBeUpdated = getUser(username);
+async function deleteEntry(username, entryID) {
+    let userToBeUpdated = await getUserByUsername(username);
     //First check getUser does NOT return an error
     if (!(userToBeUpdated instanceof Error)) {
         //Delete entry
@@ -279,13 +331,13 @@ function deleteEntry(username, entryID) {
 module.exports = 
 {
     getAllUSERS,
-    getUser,
+    getUserByUsername,
     getUserById,
     getUserByPasswd,
     loginUser,
     updateUser,
     createUser,
-    createUser2,
+    createUser_deprecated,
     deleteUser,
     getAllEntries,
     getEntry,
