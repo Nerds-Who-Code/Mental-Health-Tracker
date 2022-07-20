@@ -195,8 +195,8 @@ APIrouter.post('/createUser2',
         const newUser = await createUser2()
         res.status(200).json({ message: 'ok', data: newUser });
     } catch (error) {
-        console.log("500: Internal server error - " + error.message);
-        res.status(500).send(error.message);
+        console.error("500: Internal server error - " + error);
+        return res.status(500).json({ error: { ...error, msg: error.message } }); /**@todo msg for dev purposes, remove in production */
     }
 });
 

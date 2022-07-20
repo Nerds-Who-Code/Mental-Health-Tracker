@@ -157,24 +157,29 @@ async function createUser(username, newUserData) {
 
 async function createUser2(username, newUserData) {
   // Connect the client
-  await prisma.$connect()
+  // await prisma.$connect()
 
-  await prisma.user.create({
-    data: {
-      userId: 2,
-      name: "Elder Gnome",
-      username: "elderGnome",
-      email: "eldergnome@example.com",
-      password: "$2b$10$3lxOLSkbLYe3QP/ro2TZieBay3hq/.RcFWxEFC4/Dh1gVoedQLH1u", //"HAHAHAHA"
-      age: 99,
-      lastLogin: "01-05-2022",
-      isLoggedIn: false,
-    }
-  })
-
-  const allUsers = await prisma.user.findMany()
-  console.dir(allUsers, { depth: null })
-  return allUsers
+  // try {
+    await prisma.user.create({
+      data: {
+        userId: 2,
+        name: "Elder Gnome",
+        username: "elderGnome",
+        email: "eldergnome@example.com",
+        password: "$2b$10$3lxOLSkbLYe3QP/ro2TZieBay3hq/.RcFWxEFC4/Dh1gVoedQLH1u", //"HAHAHAHA"
+        age: 99,
+        lastLogin: "01-05-2022",
+        isLoggedIn: false,
+      }
+    })
+  
+    const allUsers = await prisma.user.findMany()
+    console.dir(allUsers, { depth: null })
+    return allUsers
+  // } catch (error) {
+  //   console.error(`[API] createUser2: ${JSON.stringify(error, null, 4)}`)
+  // }
+  
 }
 
 // Delete a user by username
