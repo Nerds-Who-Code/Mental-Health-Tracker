@@ -103,26 +103,27 @@ async function getUserByPasswd(username, password) {
 // And sets the isLoggedIn flag of the user to true.
 async function loginUser(username, password) {
     const foundUser = await getUserByUsername(username);
-    //User not found
+
+    // User not found
     if (foundUser instanceof Error) {
-        //We won't tell specifically if the username was found or not, or if the password was incorrect.
+        // We won't tell specifically if the username was found or not, or if the password was incorrect.
         //This leaves an ambiguous error message for someone trying to hack an account.
         return new Error(`Error: User with username ${username} not found or password incorrect`);
     }
-    //Check if password matches
-    //Check if a plaintext password is equal to the hash of that password. (The hash is stored in user data)
+    // Check if password matches
+    // Check if a plaintext password is equal to the hash of that password. (The hash is stored in user data)
     try {
-        //First argument is the plainttext password, the 2nd argument is the hash of that password
+        // First argument is the plainttext password, the 2nd argument is the hash of that password
         const isPasswdEqual = await bcrypt.compare(password, foundUser.password);
-        //If password are equal (isPasswdEqual = true)
+        // If password are equal (isPasswdEqual = true)
         if (isPasswdEqual) {
-            //Change isLoggedIn to true.
-            updateUser(username, "isLoggedIn", true);
-            //Set last login to current date.
-            let today = new Date();
-            //Date format: YYYY-MM-DD or Year-Month-Day
-            let dateToStr = (today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
-            updateUser(username, "lastLogin", dateToStr);
+            // Change isLoggedIn to true.
+            // await updateUser(username, "isLoggedIn", true);
+            // Set last login to current date.
+            // let today = new Date();
+            // Date format: YYYY-MM-DD or Year-Month-Day
+            // let dateToStr = (today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
+            // await updateUser(username, "lastLogin", dateToStr);
 
             return foundUser;
         } else {

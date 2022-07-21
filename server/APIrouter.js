@@ -9,7 +9,7 @@ const { getUser,
         loginUser,
         updateUser,
         createUser,
-        createUser2,
+        createUser_deprecated,
         deleteUser,
         getAllEntries,
         addEntry,
@@ -108,16 +108,20 @@ APIrouter.put('/getUserByPasswd/:username', async (req, res, next) => {
     }
 });
 
-//This route is async  because the hashing library is also async.
 APIrouter.put('/loginUser/:username', async (req, res, next) => {
     try {
-        //We need to wrap this in a self-executing async function, because the hashing library is also async.
+      /**
+       * @todo    [220720] we should supply username in body, imo
+       * @example const { username, password } = req.body;
+       */
         const foundUser = await loginUser(req.params.username, req.body.password);
-        if (!(foundUser instanceof Error)) {
-            res.status(201).send(foundUser);
-        } else {
-            res.status(404).send(foundUser.message);
-        }
+
+        /**
+         * @note this is a cleaner pattern
+         */
+        if (foundUser instanceof Error) return res.status(404).send(null);
+        return res.status(201).send(foundUser);
+
     } catch (error) {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
