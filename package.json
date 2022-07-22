@@ -1,0 +1,25 @@
+{
+  "name": "mental-health-tracker",
+  "version": "1.0.0",
+  "description": "mental-health-tracker-launcher",
+  "main": "index.js",
+  "scripts": {
+    "server": "PORT=3001 nodemon server/index.js",
+    "client": "npm start --prefix client",
+    "start": "clear && concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nerds-Who-Code/Mental-Health-Tracker.git"
+  },
+  "author": "Nerds Who Code",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nerds-Who-Code/Mental-Health-Tracker/issues"
+  },
+  "homepage": "https://github.com/Nerds-Who-Code/Mental-Health-Tracker#readme",
+  "dependencies": {
+    "concurrently": "^7.3.0",
+    "nodemon": "^2.0.19"
+  }
+}
