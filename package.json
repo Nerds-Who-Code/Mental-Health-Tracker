@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "mental-health-tracker-launcher",
   "main": "index.js",
+  "homepage": "https://nerds-who-code.github.io/mental-health-tracker",
   "scripts": {
     "server": "PORT=3001 nodemon server/index.js",
     "client": "npm start --prefix client",
