@@ -18,7 +18,7 @@ export default function Entry(props) {
     */
 
     return (
-        <div className="px-4 py-4 odd:bg-white even:bg-cyan-100" >
+        <div className="px-4 py-4 odd:bg-white even:bg-blue-100" >
             
                 <span className="entryDate inline-block w-28 px-2">{props.entryInfo.date}</span>
                 

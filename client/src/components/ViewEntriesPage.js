@@ -36,7 +36,7 @@ export default function ViewEntriesPage() {
     }
     
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center my-16 ">
             <h1>View your entries</h1>
             <Link to="/dashboard" className="my-4 hover:text-cyan-500">Go back to dashboard</Link>
             
