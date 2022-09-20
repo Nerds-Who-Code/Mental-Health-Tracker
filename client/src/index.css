@@ -10,8 +10,9 @@
       @apply text-2xl;
     }
     body {
-      @apply bg-gradient-to-b from-cyan-200 to-blue-200;
-      @apply h-screen;
+           @apply bg-blue-200;
+     
+      @apply overflow-auto;
     }
     input[type=text], input[type=password], input[type=email], input[type=number] {
       @apply shadow appearance-none border rounded w-full py-2 px-3 text-stone-900 leading-tight focus:outline-none;

@@ -36,9 +36,10 @@ export default function ViewEntriesPage() {
     }
     
     return (
-        <div>
-            <h2>View your entries</h2>
-            <Link to="/dashboard"><button>Go back to dashboard</button></Link>
+        <div className="flex flex-col items-center justify-center my-16 ">
+            <h1>View your entries</h1>
+            <Link to="/dashboard" className="my-4 hover:text-cyan-500">Go back to dashboard</Link>
+            
             {loadingState}
             {failedState}
             {noEntries}

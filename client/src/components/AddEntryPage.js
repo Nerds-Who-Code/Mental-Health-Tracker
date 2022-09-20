@@ -129,14 +129,11 @@ export default function AddEntryPage() {
     ];
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center my-16">
             <h1 className="my-2">{entryState.type} Tracker</h1>
-            <form 
-                id="addEntry" 
-                className="flex flex-col items-left justify-center  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" 
-                action="#" 
-                onSubmit={addNewEntry}>
-                <div>
+            <form id="addEntry" className="flex flex-col items-left justify-center  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={addNewEntry}>
+                
+                <div >
                     <div className="radioInput">
                         
                         <input 
