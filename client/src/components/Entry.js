@@ -13,8 +13,6 @@ export default function Entry(props) {
     };
 
     return (
-<<<<<<< HEAD
-
         <div className="px-4 py-4 odd:bg-white even:bg-blue-100" >
             
                 <span className="entryDate inline-block w-28 px-2">{props.entryInfo.date}</span>
@@ -27,18 +25,6 @@ export default function Entry(props) {
                 <button className="entryEditButton inline-block w-6 px-2">✏️</button>
                 <button className="entryDeleteButton inline-block w-8 px-2" onClick={deleteEntryOnClick}>🗑️</button>
                  
-
-=======
-        <div className="entryCard">
-            <h4>Date Created: {props.entryInfo.date}</h4>
-            <hr />
-            <p><strong>Type: </strong>{props.entryInfo.type}</p>
-            <p><strong>Level: </strong>{props.entryInfo.level}</p>
-            <p><strong>Events: </strong> {props.entryInfo.event.filter(item => item !== null).join(", ")}</p>
-            <p><strong>Notes: </strong>{props.entryInfo.notes}</p>
-            <button>Edit</button>
-            <button onClick={deleteEntryOnClick}>Delete</button>
->>>>>>> cd5133f (Fixed the bug to show all the events in Entry.js)
         </div>
     )
 }
