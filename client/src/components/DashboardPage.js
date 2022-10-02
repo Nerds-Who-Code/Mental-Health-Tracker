@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from 'react-redux';
-import {logoutUser} from '../store';
+import {useSelector} from 'react-redux';
 
 export default function DashboardPage() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const userDataGlobalState = useSelector(state => state.userData.userInfo);
     const [name, setName] = useState("Your name should be here.");
 
@@ -24,13 +22,6 @@ export default function DashboardPage() {
     useEffect( () => {
         setName(userDataGlobalState.name);
     }, [userDataGlobalState.name]);
-
-    // Log out code
-    const logOut = () => {
-        dispatch(logoutUser(userDataGlobalState.username));
-        // Navigate back to the main page.
-        navigate("/");
-    }
 
     return (
     <div className='w-screen h-screen flex flex-col items-center justify-center  text-slate-800'>

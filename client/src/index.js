@@ -18,6 +18,7 @@ import DashboardPage from './components/DashboardPage';
 import AddEntryPage from './components/AddEntryPage';
 import ViewEntriesPage from './components/ViewEntriesPage';
 import EntryOverViewPage from './components/EntryOverviewPage';
+import AboutPage from './components/AboutPage';
 
 
 /*
@@ -49,6 +50,7 @@ root.render(
               <Route path="/add-entry" element={<AddEntryPage />} />
               <Route path="/view-entries" element={<ViewEntriesPage />} />
               <Route path="/entry-overview" element={<EntryOverViewPage />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>
