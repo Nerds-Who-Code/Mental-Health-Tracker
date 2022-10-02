@@ -10,8 +10,8 @@
       @apply text-2xl;
     }
     body {
-           @apply bg-blue-200;
-     
+          @apply bg-gradient-to-r from-cyan-200 to-blue-200;
+
       @apply overflow-auto;
     }
     input[type=text], input[type=password], input[type=email], input[type=number] {
