@@ -5,6 +5,7 @@ import {fetchEntries} from "../store";
 import Chart from "chart.js/auto";
 import {Bar, Pie} from "react-chartjs-2";
 import ErrorBoundary from './ErrorBoundary';
+import NavBtnDefault from "./NavBtnDefault";
 
 export default function EntryOverviewPage() {
   const dispatch = useDispatch();
@@ -33,12 +34,7 @@ export default function EntryOverviewPage() {
       noEntries = (
           <React.Fragment>
           <h3>You have not added any entries yet...</h3>
-          <Link to="/add-entry">
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2'>
-              Add new entry
-            </button>
-          </Link>
+          <NavBtnDefault link="/add-entry" btnText="Add new entry" />
           </React.Fragment>);
   }
 
@@ -191,12 +187,7 @@ export default function EntryOverviewPage() {
                   className='m-2'>
                   Your Mental Health Overview
                 </h1>
-                <Link to="/dashboard">
-                  <button 
-                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2'>
-                    Go back to dashboard
-                  </button>
-                </Link>
+                <NavBtnDefault link="/dashboard" btnText="Go back to dashboard" />
             </div>
             <div className='flex flex-col items-center justify-center'>
               <h2 
