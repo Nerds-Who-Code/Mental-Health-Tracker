@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "mental-health-tracker-launcher",
   "main": "index.js",
-  "homepage": "https://nerds-who-code.github.io/mental-health-tracker",
+  "homepage": "https://github.com/Nerds-Who-Code/Mental-Health-Tracker#readme",
   "scripts": {
     "server": "PORT=3001 nodemon server/index.js",
     "client": "npm start --prefix client",
@@ -19,9 +19,10 @@
   "bugs": {
     "url": "https://github.com/Nerds-Who-Code/Mental-Health-Tracker/issues"
   },
-  "homepage": "https://github.com/Nerds-Who-Code/Mental-Health-Tracker#readme",
   "dependencies": {
+    "chart.js": "^3.9.1",
     "concurrently": "^7.3.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "react-chartjs-2": "^4.3.1"
   }
 }
