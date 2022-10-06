@@ -204,21 +204,27 @@ export default function EntryOverviewPage() {
                 Your mental health levels per day.
               </h2>
               <ErrorBoundary>
-                <Bar data={barChartLevelsData} />
+                <div className="w-1/2">
+                  <Bar data={barChartLevelsData} />
+                </div>
               </ErrorBoundary>
               <h2 
                 className='m-2'>
                 What types of mental health affect you the most.
               </h2>
               <ErrorBoundary>
-                <Pie data={pieChartTypeData} />
+                <div className="w-1/4">
+                  <Pie data={pieChartTypeData} />
+                </div>
               </ErrorBoundary>
               <h2 
                 className='m-2'>
                 Which events have affected you the most.
               </h2>
               <ErrorBoundary>
-                <Pie data={pieChartEventData} />
+                <div className="w-1/4">
+                  <Pie data={pieChartEventData} />
+                </div>
               </ErrorBoundary>
             </div>
         </div>
