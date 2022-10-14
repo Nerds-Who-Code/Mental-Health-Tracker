@@ -130,6 +130,8 @@ export default function EntryOverviewPage() {
     }
   })();
 
+
+
     //The bar chart data that displays in the bar chart
     const barChartLevelsData = {
       labels: entryToChartData.dates,
@@ -154,6 +156,16 @@ export default function EntryOverviewPage() {
         },
       ],
     };
+
+    //The Y Axis of the bar chart fixed at value 10 max
+    const options = {
+      scales: {
+        y: {
+          suggestedMin: 0,
+          suggestedMax: 10
+        }
+      }
+    }
 
     //The pie chart event data that displays in the pie chart
     const pieChartTypeData = {
@@ -205,7 +217,7 @@ export default function EntryOverviewPage() {
               </h2>
               <ErrorBoundary>
                 <div className="w-1/2">
-                  <Bar data={barChartLevelsData} />
+                  <Bar options={options} data={barChartLevelsData} />
                 </div>
               </ErrorBoundary>
               <h2 
