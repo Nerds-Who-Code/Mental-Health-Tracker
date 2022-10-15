@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt"); //import the bcrypt library for hashing functions
+//Import utility functions
+const { formatDateToStr, generateID } = require("./util");
 //Import mockData 
 var USERS = require("./mockData"); //This can not be a const or else there will be an error with delete requests.
 
@@ -82,10 +84,7 @@ async function loginUser(username, password) {
             //Change isLoggedIn to true.
             updateUser(username, "isLoggedIn", true);
             //Set last login to current date.
-            let today = new Date();
-            //Date format: YYYY-MM-DD or Year-Month-Day
-            let dateToStr = (today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
-            updateUser(username, "lastLogin", dateToStr);
+            updateUser(username, "lastLogin", formatDateToStr(new Date(), "YYYY-MM-DD"));
 
             return foundUser;
         } else {
@@ -141,7 +140,7 @@ async function createUser(username, newUserData) {
             //Replace the plaintext password of the user with their hashed version.
             newUserData.password = hashedPassword;
             //Generate a unique ID for each user.
-            newUserData.userId = Math.floor(Math.random() * 10000);
+            newUserData.userId = generateID();
             //Add the user to the database
             USERS.push(newUserData);
             return newUserData;
@@ -192,12 +191,9 @@ function addEntry(username, entry) {
     //First check getUser does NOT return an error
     if (!(userToBeUpdated instanceof Error)) {
         // First Generate a unique entry ID
-        entry.entryId = Math.floor(Math.random() * 10000);
+        entry.entryId = generateID(16);
         // Set the submit date of the entry to current date
-        let today = new Date();
-        //Date format: YYYY-MM-DD or Year-Month-Day
-        let dateToStr = (today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate());
-        entry.date = dateToStr;
+        entry.date = formatDateToStr(new Date(), "YYYY-MM-DD");
         // Add entry to database.
         userToBeUpdated['entries'].push(entry);
         return entry;
@@ -235,7 +231,7 @@ function deleteEntry(username, entryID) {
     if (!(userToBeUpdated instanceof Error)) {
         //Delete entry
         userToBeUpdated.entries = userToBeUpdated.entries.filter((entry) => 
-            entry.entryId !== parseInt(entryID)
+            entry.entryId !== entryID
         );
         //No error. EntryId of the deleted entry is returned.
         return entryID; 
