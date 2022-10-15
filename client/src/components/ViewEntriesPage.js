@@ -31,14 +31,24 @@ export default function ViewEntriesPage() {
         noEntries = (
             <React.Fragment>
             <h3>You have not added any entries yet...</h3>
-            <Link to="/add-entry"><button>Add new entry</button></Link>
+            <Link to="/add-entry">
+                <button
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2'>
+                    Add new entry
+                </button>
+            </Link>
             </React.Fragment>);
     }
     
     return (
         <div className="flex flex-col items-center justify-center my-16 ">
             <h1>View your entries</h1>
-            <Link to="/dashboard" className="my-4 hover:text-cyan-500">Go back to dashboard</Link>
+            <Link to="/dashboard">
+                <button
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2'>
+                    Go back to dashboard
+                </button>
+            </Link>
             
             {loadingState}
             {failedState}
