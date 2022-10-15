@@ -1,5 +1,4 @@
 import {useDispatch, useSelector} from 'react-redux';
-// import './Entry.css';
 import {deleteEntry} from '../store';
 
 //This should be styled like a card.
@@ -25,8 +24,6 @@ export default function Entry(props) {
                 <span className="entryNoteHover inline-block w-6 px-2">📔<div className="hidden inline">{props.entryInfo.notes}</div></span>
                 <button className="entryEditButton inline-block w-6 px-2">✏️</button>
                 <button className="entryDeleteButton inline-block w-8 px-2" onClick={deleteEntryOnClick}>🗑️</button>
-                 
-
         </div>
     )
 }

@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Link} from "react-router-dom";
 import {fetchEntries} from "../store";
 import Entry from "./Entry";
+import NavBtnDefault from "./NavBtnDefault";
 
 export default function ViewEntriesPage() {
     const dispatch = useDispatch();
@@ -31,21 +32,21 @@ export default function ViewEntriesPage() {
         noEntries = (
             <React.Fragment>
             <h3>You have not added any entries yet...</h3>
-            <Link to="/add-entry"><button>Add new entry</button></Link>
+            <NavBtnDefault link="/add-entry" btnText="Add new entry" />
             </React.Fragment>);
     }
     
     return (
         <div className="flex flex-col items-center justify-center my-16 ">
             <h1>View your entries</h1>
-            <Link to="/dashboard" className="my-4 hover:text-cyan-500">Go back to dashboard</Link>
+            <NavBtnDefault link="/dashboard" btnText="Go back to dashboard" />
             
             {loadingState}
             {failedState}
             {noEntries}
             <div className="rounded py-1 shadow-md bg-white">
-            {entryDataGlobalState.entryInfo.map( (entry) =>
-            <Entry key={entry.entryId} entryInfo={entry}/>)}
+                {entryDataGlobalState.entryInfo.map( (entry) =>
+                <Entry key={entry.entryId} entryInfo={entry}/>)}
             </div>
         </div>
     )
