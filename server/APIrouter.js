@@ -9,6 +9,7 @@ const { getUser,
         loginUser,
         updateUser,
         createUser,
+        createUser_deprecated,
         deleteUser,
         getAllEntries,
         addEntry,
@@ -63,9 +64,9 @@ APIrouter.use(APIlogger);
 //For example:
 //https://localhost:3001/getUser/test123
 //req.params.username = "test123"
-APIrouter.get('/getUser/:username', (req, res, next) => {
+APIrouter.get('/getUser/:username', async (req, res, next) => {
     try {
-        const foundUser = getUser(req.params.username);
+        const foundUser = await getUser(req.params.username);
         if (!(foundUser instanceof Error)) {
             res.status(200).send(foundUser);
         }
@@ -78,9 +79,9 @@ APIrouter.get('/getUser/:username', (req, res, next) => {
     }
 });
 
-APIrouter.get('/getUserById/:id', (req, res, next) => {
+APIrouter.get('/getUserById/:id', async (req, res, next) => {
     try {
-        const foundUser = getUserById(req.params.id);
+        const foundUser = await getUserById(req.params.id);
         if (!(foundUser instanceof Error)) {
             res.status(200).send(foundUser);
         }
@@ -94,9 +95,9 @@ APIrouter.get('/getUserById/:id', (req, res, next) => {
 //We are using a PUT request instead of a GET request so that the user can
 //send the password in the request body for secure (HTTPS) encyrption instead of through the URL.
 //This way the password is not exposed in plain text.
-APIrouter.put('/getUserByPasswd/:username', (req, res, next) => {
+APIrouter.put('/getUserByPasswd/:username', async (req, res, next) => {
     try {
-        const foundUser = getUserByPasswd(req.params.username, req.body.password);
+        const foundUser = await getUserByPasswd(req.params.username, req.body.password);
         if (!(foundUser instanceof Error)) {
             res.status(201).send(foundUser);
         }
@@ -107,16 +108,20 @@ APIrouter.put('/getUserByPasswd/:username', (req, res, next) => {
     }
 });
 
-//This route is async  because the hashing library is also async.
 APIrouter.put('/loginUser/:username', async (req, res, next) => {
     try {
-        //We need to wrap this in a self-executing async function, because the hashing library is also async.
+      /**
+       * @todo    [220720] we should supply username in body, imo
+       * @example const { username, password } = req.body;
+       */
         const foundUser = await loginUser(req.params.username, req.body.password);
-        if (!(foundUser instanceof Error)) {
-            res.status(201).send(foundUser);
-        } else {
-            res.status(404).send(foundUser.message);
-        }
+
+        /**
+         * @note this is a cleaner pattern
+         */
+        if (foundUser instanceof Error) return res.status(404).send(null);
+        return res.status(201).send(foundUser);
+
     } catch (error) {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
@@ -132,9 +137,9 @@ For example if you want to change the age of a user to 5, the request body becom
 {"property": "age",
  "value": 5}
 */
-APIrouter.put('/updateUser/:username', (req, res, next) => {
+APIrouter.put('/updateUser/:username', async (req, res, next) => {
     try {
-        const updatedUser = updateUser(req.params.username, req.body.property, req.body.value);
+        const updatedUser = await updateUser(req.params.username, req.body.property, req.body.value);
         if (!(updatedUser instanceof Error)) {
             res.status(201).send(updatedUser);
         }
@@ -146,10 +151,10 @@ APIrouter.put('/updateUser/:username', (req, res, next) => {
 });
 
 /**@todo Validate the data with Express-Validator */
-//JSON Request Body Input:
-//{"user:" {your_user_data_here}}
-//This route is async  because the hashing library is also async.
-APIrouter.post('/createUser/:username', 
+// JSON Request Body Input:
+// {"user:" {your_user_data_here}}
+// This route is async  because the hashing library is also async.
+APIrouter.post('/createUser_deprecated/:username', 
                [],
                async (req, res, next) => {
     /*  There is a bug here when: if there 2 create requests made one after another, both with the exact same data,
@@ -165,7 +170,7 @@ APIrouter.post('/createUser/:username',
     }
 
     try {
-        const createdUser = await createUser(req.params.username, req.body.user);
+        const createdUser = await createUser_deprecated(req.params.username, req.body.user);
         if (!(createdUser instanceof Error)) {
             res.status(201).send(createdUser);
             return;
@@ -174,6 +179,23 @@ APIrouter.post('/createUser/:username',
     } catch (error) {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
+    }
+});
+
+APIrouter.post('/createUser/:username', 
+               [],
+               async (req, res, next) => {
+
+    try {
+        const newUser = await createUser(req.params.username, req.body.user)
+        if (!(newUser instanceof Error)) {
+          return res.status(201).send(newUser);
+        }
+        // res.status(200).json({ message: 'ok', data: newUser });
+        return res.status(404).send(newUser.message);
+    } catch (error) {
+        console.error("500: Internal server error - " + error);
+        return res.status(500).json({ msg: `Was not able to create a new user ${req.params.username}`, params: req.body.user || {}, error: { ...error, msg: error.message } }); /**@todo msg for dev purposes, remove in production */
     }
 });
 
@@ -189,9 +211,9 @@ APIrouter.delete('/deleteUser/:username', (req, res, next) => {
 
 // =============ENTRY FUNCTIONS==================
 
-APIrouter.get('/getAllEntries/:username', (req, res, next) => {
+APIrouter.get('/getAllEntries/:username', async (req, res, next) => {
     try {
-        const entries = getAllEntries(req.params.username);
+        const entries = await getAllEntries(req.params.username);
         if (!(entries instanceof Error)) {
             res.status(200).send(entries);
         }
@@ -204,9 +226,9 @@ APIrouter.get('/getAllEntries/:username', (req, res, next) => {
 
 //JSON Request Body Input:
 //{"entry:" {your_entry_data_here}}
-APIrouter.post('/addEntry/:username', (req, res, next) => {
+APIrouter.post('/addEntry/:username', async (req, res, next) => {
     try {
-        const createdEntry = addEntry(req.params.username, req.body.entry);
+        const createdEntry = await addEntry(req.params.username, req.body.entry);
         if (!(createdEntry instanceof Error)) {
             res.status(201).send(createdEntry);
         }
@@ -226,9 +248,9 @@ For example if you want to change the level of an entry to 6, the request body b
 {"property": "level",
  "value": 6}
 */
-APIrouter.put('/updateEntry/:username/:entryID', (req, res, next) => {
+APIrouter.put('/updateEntry/:username/:entryID', async (req, res, next) => {
     try {
-        const updatedEntry = updateEntry(req.params.username, req.params.entryID, req.body.property, req.body.value);
+        const updatedEntry = await updateEntry(req.params.username, req.params.entryID, req.body.property, req.body.value);
         if (!(updatedEntry instanceof Error)) {
             res.status(201).send(updatedEntry);
         }
@@ -239,9 +261,9 @@ APIrouter.put('/updateEntry/:username/:entryID', (req, res, next) => {
     }
 });
 
-APIrouter.delete('/deleteEntry/:username/:entryID', (req, res, next) => {
+APIrouter.delete('/deleteEntry/:username/:entryID', async (req, res, next) => {
     try {
-        const entryID = deleteEntry(req.params.username, req.params.entryID);
+        const entryID = await deleteEntry(req.params.username, req.params.entryID);
         if (!(entryID instanceof Error)) {
             //On success send the entryID of the deleted entry back as a confirmation.
             res.status(201).send(entryID);

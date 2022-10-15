@@ -4,11 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../store';
 
 export default function LoginContainer() {
-    //Used for navigating to different routes in the client without buttons
+    // Used for navigating to different routes in the client without buttons
     const navigate = useNavigate();
-    //Used for dispatching actions to the global state (store.js).
+    // Used for dispatching actions to the global state (store.js).
     const dispatch = useDispatch();
-    //Get the userData from the global state
+    // Get the userData from the global state
     const userDataGlobalState = useSelector(state => state.userData);
 
     /*
@@ -18,15 +18,15 @@ export default function LoginContainer() {
         password: test
     */
 
-    //Values of the username and password input boxes
+    // Values of the username and password input boxes
     const [loginContainerState, setLoginContainerState] = useState({
         userNameInput: "",
         passwordInput: ""
     });
 
-    //Handles changes in the input boxes (Saves user input to the React State manager)
-    //e is the event that is accociated with the input box that the user is inputting/using
-    //make sure to keep the name attribute of html element the same as the key in state object
+    // Handles changes in the input boxes (Saves user input to the React State manager)
+    // e is the event that is accociated with the input box that the user is inputting/using
+    // make sure to keep the name attribute of html element the same as the key in state object
     const handleChange = (e) => {
         const value = e.target.value;
         setLoginContainerState({
@@ -35,17 +35,24 @@ export default function LoginContainer() {
         });
     };
 
-    //This will listen if the the global state has updated.
-    //Depending on the status of the global state triggered by a dispatch from the login button
-    //Login will happen or not.
+    // This will listen if the the global state has updated.
+    // Depending on the status of the global state triggered by a dispatch from the login button
+    // Login will happen or not.
     useEffect(() => {
         if(userDataGlobalState.status === "success") {
             // Succesful Login
-            if (userDataGlobalState.userInfo.isLoggedIn === true) {
+            
+            /**
+             * @note      [defensive programming] userInfo may be undefined, use optional chaining  
+             * @example   object?.prop1?.prop2
+             * 
+             * @link      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+             */
+            if (userDataGlobalState.userInfo?.isLoggedIn === true) {
                 // Go to the dashboard after authorization is success (dont forget to replace the url with a real production url)
                 navigate("/dashboard");
             }
-        } else if (userDataGlobalState.userInfo.isLoggedIn === false || 
+        } else if (userDataGlobalState.userInfo?.isLoggedIn === false || 
             userDataGlobalState.status === "failed") {
                 // Failed login (Error 404 response from server)
                 // This error happens if:
@@ -56,13 +63,18 @@ export default function LoginContainer() {
             }
     }, [userDataGlobalState]);
 
-    //Login authorization code
+    // Login authorization code
     const authorize = async (e) => {
-        //prevents the browser from performing its default behavior when a form is submitted.
-        //prevent page from refreshing
+        // prevents the browser from performing its default behavior when a form is submitted.
+        // prevent page from refreshing
         e.preventDefault();
-        //Retrieve the user data from the server and store it in the global state. See store.js for how this happens.
-        dispatch(loginUser({username: loginContainerState.userNameInput, password: loginContainerState.passwordInput}));
+        // Retrieve the user data from the server and store it in the global state. See store.js for how this happens.
+        dispatch(
+          loginUser({
+            username: loginContainerState.userNameInput, 
+            password: loginContainerState.passwordInput /**@todo passwords should be sent hashed/encrypted */
+          })
+        )
     };
 
     return (
