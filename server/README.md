@@ -1,35 +1,26 @@
-# Getting Started with the server for the mental health tracker
+# Getting Started with the server for Feelsify
 
 In the project ./server/ directory, you can run:
 
-### `clear && node index.js`
+### `clear && node ./src/index.js`
+or
+### `npm start`
+or
+### `./start_server.sh`
+You may first need to make the bash script executable with the command `chmod u+x start_server.sh`
 
-Runs the server the default port 3000.
-Open [http://localhost:3000/api](http://localhost:3000/api) to view it in your browser.
-
-To change the port of the server run:
-
-### `clear && PORT=3001 node index.js`
-
-It is reccomended to use port 3001 so that the react client can run on port 3000. 
-If both the server and client run on the same port there is going to be an error.
+Runs the server the default port 3001.
 Open [http://localhost:3001/api](http://localhost:3001/api) to view it in your browser.
 
-## Start the server with a file
+To change the port of the server edit the .env file.
 
-You can start the server by executing the BASH script called start_server.sh with the command.
-This will automatically start the server on port 3001.
+### Set up the PostGreSQL database for the server
 
-### `./start_server.sh`
-
-You may first need to make the bash script executable with the command `chmod u+x start_server.sh`
+If you its your first time you need to create a PSQL database first called 'feelsifyDB'.
+You can change the PSQL connection info in .env 
+After creating the database you need to run the db_init.sql script in PSQL for create the tables for the database.
 
 ## Server does not work with the browser
 
 The server has been designed to work the client, not with the browser.
 You can use the program "POSTMAN" to function as an alternative client for development and testing purposes.
-
-To see all the available routes and API calls for the server go to APIrouter.js (routes) and mockAPI.js (functions).
-
-### NOTE: Because there is no official database yet. All non hard coded user data will be lost when the server restarts.
-

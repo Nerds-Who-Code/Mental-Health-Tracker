@@ -11,5 +11,6 @@ cd ..
 cd client
 npm install
 npm audit
+cd ..
 echo "Done. node_modules are installed."
 echo "You can now use 'npm start' to start up the project"

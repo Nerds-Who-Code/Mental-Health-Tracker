@@ -1,6 +1,8 @@
 
 // UTILITY FUNCTIONS
 
+const crypto = require('crypto');
+
 // This function transforms a date object to a string format.
 // date is a Date object. 
 // To format today's date, input (new Date()) as the first parameter
@@ -9,7 +11,9 @@
 // "YYYY-MM-DD"
 // "DD-MM-YYYY"
 // "MM-DD-YYYY"
-function formatDateToStr(date, format="DD-MM-YYYY", seperator="-") {
+// "YYYYMMDD" (no seperator)
+// YYYY-MM-DD is the default format for the ISO 8601 standard in PostGreSQL date datatype
+function formatDateToStr(date, format="YYYY-MM-DD", seperator="-") {
     switch(format) {
         case "YYYY-MM-DD":
             return (date.getFullYear() + seperator + (date.getMonth()+1) + seperator + date.getDate());
@@ -17,11 +21,21 @@ function formatDateToStr(date, format="DD-MM-YYYY", seperator="-") {
             return (date.getDate() + seperator + (date.getMonth()+1) + seperator + date.getFullYear());
         case "MM-DD-YYYY":
             return ((date.getMonth()+1) + seperator + date.getDate() + seperator + date.getFullYear());
+        case "YYYYMMDD":
+            return (date.getFullYear() + (date.getMonth()+1) + date.getDate());
         default: 
             return "Error: Date format not correct."
     }
 }
 
+//Generetate a random V4 UUID. 
+//This can be used for creating primary keys for PostGreSQL database.
+function genUUID()
+{
+    return crypto.randomUUID();
+}
+
+// NOTE: THIS CAN NOT BE USED FOR PSQL PRIMARY KEYS
 // Returns a random number in string format containing the digits 0-9, where the 1st digit is never 0.
 // The amount of difits is deterimined by the numLength. (Default = 32)
 // With numLength=32 the chance of generating an identical ID for 2 different function calls is extremely unlikely.
@@ -39,12 +53,11 @@ function generateID(numLength=32) {
     return randNum;
 }
 
-console.log(parseInt(generateID()));
-
 //Export all the functions
 module.exports = 
 {
     formatDateToStr,
+    genUUID,
     generateID
 };
 
