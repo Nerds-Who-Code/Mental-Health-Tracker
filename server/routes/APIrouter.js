@@ -14,7 +14,7 @@ const { getUser,
         getAllEntries,
         addEntry,
         updateEntry,
-        deleteEntry } = require('./mockAPI');
+        deleteEntry } = require('../controllers/mockAPI.js');
 
 // Create the api router.
 // The base URL for this router is URL:PORT/api/
@@ -65,28 +65,36 @@ APIrouter.use(APIlogger);
 //https://localhost:3001/getUser/test123
 //req.params.username = "test123"
 APIrouter.get('/getUser/:username', async (req, res, next) => {
-    try {
+    try 
+    {
         const foundUser = await getUser(req.params.username);
-        if (!(foundUser instanceof Error)) {
+        if (!(foundUser instanceof Error)) 
+        {
             res.status(200).send(foundUser);
         }
         // User not found error. Send 404 response.
         res.status(404).send(foundUser.message);
     // Internal server errors
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
 });
 
 APIrouter.get('/getUserById/:id', async (req, res, next) => {
-    try {
+    try 
+    {
         const foundUser = await getUserById(req.params.id);
-        if (!(foundUser instanceof Error)) {
+        if (!(foundUser instanceof Error)) 
+        {
             res.status(200).send(foundUser);
         }
         res.status(404).send(foundUser.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -96,13 +104,17 @@ APIrouter.get('/getUserById/:id', async (req, res, next) => {
 //send the password in the request body for secure (HTTPS) encyrption instead of through the URL.
 //This way the password is not exposed in plain text.
 APIrouter.put('/getUserByPasswd/:username', async (req, res, next) => {
-    try {
+    try 
+    {
         const foundUser = await getUserByPasswd(req.params.username, req.body.password);
-        if (!(foundUser instanceof Error)) {
+        if (!(foundUser instanceof Error)) 
+        {
             res.status(201).send(foundUser);
         }
         res.status(404).send(foundUser.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -119,7 +131,10 @@ APIrouter.put('/loginUser/:username', async (req, res, next) => {
         /**
          * @note this is a cleaner pattern
          */
-        if (foundUser instanceof Error) return res.status(404).send(null);
+        if (foundUser instanceof Error) 
+        {
+            return res.status(404).send(null);
+        }
         return res.status(201).send(foundUser);
 
     } catch (error) {
@@ -138,13 +153,17 @@ For example if you want to change the age of a user to 5, the request body becom
  "value": 5}
 */
 APIrouter.put('/updateUser/:username', async (req, res, next) => {
-    try {
+    try 
+    {
         const updatedUser = await updateUser(req.params.username, req.body.property, req.body.value);
-        if (!(updatedUser instanceof Error)) {
+        if (!(updatedUser instanceof Error)) 
+        {
             res.status(201).send(updatedUser);
         }
         res.status(404).send(updatedUser.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -164,19 +183,23 @@ APIrouter.post('/createUser_deprecated/:username',
 
     // Check for body errors (Data validation)
     const validationErrors = validationResult(req);
-    if(!validationErrors.isEmpty()) {
+    if(!validationErrors.isEmpty()) 
+    {
         // Send Bad Request Response with the error codes of the validation.
         return res.status(400).send({errors: validationErrors.array()});
     }
 
     try {
         const createdUser = await createUser_deprecated(req.params.username, req.body.user);
-        if (!(createdUser instanceof Error)) {
+        if (!(createdUser instanceof Error)) 
+        {
             res.status(201).send(createdUser);
             return;
         }
         res.status(404).send(createdUser.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -186,24 +209,31 @@ APIrouter.post('/createUser/:username',
                [],
                async (req, res, next) => {
 
-    try {
+    try 
+    {
         const newUser = await createUser(req.params.username, req.body.user)
-        if (!(newUser instanceof Error)) {
-          return res.status(201).send(newUser);
+        if (!(newUser instanceof Error)) 
+        {
+            return res.status(201).send(newUser);
         }
         // res.status(200).json({ message: 'ok', data: newUser });
         return res.status(404).send(newUser.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.error("500: Internal server error - " + error);
         return res.status(500).json({ msg: `Was not able to create a new user ${req.params.username}`, params: req.body.user || {}, error: { ...error, msg: error.message } }); /**@todo msg for dev purposes, remove in production */
     }
 });
 
 APIrouter.delete('/deleteUser/:username', (req, res, next) => {
-    try {
+    try 
+    {
         deleteUser(req.params.username);
         res.status(201).send(`User with username ${req.params.username} was deleted.`);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -212,13 +242,17 @@ APIrouter.delete('/deleteUser/:username', (req, res, next) => {
 // =============ENTRY FUNCTIONS==================
 
 APIrouter.get('/getAllEntries/:username', async (req, res, next) => {
-    try {
+    try 
+    {
         const entries = await getAllEntries(req.params.username);
-        if (!(entries instanceof Error)) {
+        if (!(entries instanceof Error)) 
+        {
             res.status(200).send(entries);
         }
         res.status(404).send(entries.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -227,13 +261,17 @@ APIrouter.get('/getAllEntries/:username', async (req, res, next) => {
 //JSON Request Body Input:
 //{"entry:" {your_entry_data_here}}
 APIrouter.post('/addEntry/:username', async (req, res, next) => {
-    try {
+    try 
+    {
         const createdEntry = await addEntry(req.params.username, req.body.entry);
-        if (!(createdEntry instanceof Error)) {
+        if (!(createdEntry instanceof Error)) 
+        {
             res.status(201).send(createdEntry);
         }
         res.status(404).send(createdEntry.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
@@ -251,25 +289,32 @@ For example if you want to change the level of an entry to 6, the request body b
 APIrouter.put('/updateEntry/:username/:entryID', async (req, res, next) => {
     try {
         const updatedEntry = await updateEntry(req.params.username, req.params.entryID, req.body.property, req.body.value);
-        if (!(updatedEntry instanceof Error)) {
+        if (!(updatedEntry instanceof Error)) 
+        {
             res.status(201).send(updatedEntry);
         }
         res.status(404).send(updatedEntry.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
 });
 
 APIrouter.delete('/deleteEntry/:username/:entryID', async (req, res, next) => {
-    try {
+    try 
+    {
         const entryID = await deleteEntry(req.params.username, req.params.entryID);
-        if (!(entryID instanceof Error)) {
+        if (!(entryID instanceof Error)) 
+        {
             //On success send the entryID of the deleted entry back as a confirmation.
             res.status(201).send(entryID);
         }
         res.status(404).send(entryID.message);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);  
     }

@@ -1,11 +1,8 @@
 const bcrypt = require("bcrypt"); //import the bcrypt library for hashing functions
 //Import utility functions
-const { formatDateToStr, generateID } = require("./util");
+const { formatDateToStr, generateID } = require("../util.js");
 //Import mockData 
-var USERS = require("./mockData"); //This can not be a const or else there will be an error with delete requests.
-
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+var USERS = require("../mockData"); //This can not be a const or else there will be an error with delete requests.
 
 // THESE ARE JUST MOCK API FUNCTIONS FOR TESTING AND SHOULD BE REPLACED BY REAL ONES
 
@@ -24,11 +21,11 @@ function getAllUSERS() {
 /**
  * Get a single user by username
  * 
- * @deprecated old API
+
  * @param {*} username 
  * @returns 
  */
-function getUser_deprecated(username) {
+function getUserByUsername(username) {
     const foundUser = USERS.find((user) => 
         user.username === username
         );
@@ -42,11 +39,11 @@ function getUser_deprecated(username) {
 /**
  * Get a single user by username
  * 
- * @deprecated old API
  * @param {string} username 
  * @returns {Promise{Error | Object}}
+ * @todo DELETE MONGO
  */
-async function getUserByUsername(username) {
+async function getUserByUsername_deprecated(username) {
     const foundUser = await prisma.user.findFirst({ where: { username }})
     // console.log(`getUser2: ${username}, foundUser: ${foundUser}`)
     if (foundUser) return foundUser
@@ -161,12 +158,11 @@ async function updateUser(username, prop, value) {
 // Create a new user
 // newUserData is an object
 /**
- * @deprecated old API
  * @param {*} username 
  * @param {*} newUserData 
  * @returns 
  */
-async function createUser_deprecated(username, newUserData) {
+async function createUser(username, newUserData) {
     //First check if user with that username already exists
     const foundUser = await getUserByUsername(username);
     if (!(foundUser instanceof Error)) {
@@ -195,12 +191,13 @@ async function createUser_deprecated(username, newUserData) {
 }
 
 /**
- * @todo Need to account for all unique User properties: username && email.
+ * @todo DELETE MONGO
  * @param {string} username 
  * @param {Object} newUserData 
  * @returns {Promise{Object}}
+ * 
  */
-async function createUser(username, newUserData) {
+async function createUser_deprecated(username, newUserData) {
   const foundUser = await getUserByUsername(username);
   if (!(foundUser instanceof Error)) {
       return new Error(`Error: user with username '${username}' already exists`);
@@ -208,7 +205,7 @@ async function createUser(username, newUserData) {
     // console.log(`createUser2: creating ${username} and ${JSON.stringify(newUserData)}`)
       // Before adding the user to the database we need to first hash the password for security.
       // Only the hash is stored in the user data. The plaintext password is never stored.
-      // When the user logs in it will check if the given plaitext password matches the hash stored in the database.
+      // When the user logs in it will check if the given plaintext password matches the hash stored in the database.
       // See function loginUser for more info.
       try {
           // generate the salt. The default salt rounds is 10.
@@ -334,7 +331,6 @@ module.exports =
     loginUser,
     updateUser,
     createUser,
-    createUser_deprecated,
     deleteUser,
     getAllEntries,
     getEntry,

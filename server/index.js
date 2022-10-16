@@ -1,10 +1,27 @@
+/*
+  ExpressJS Server initialization file
+*/
+
 //Imports
 const express = require('express');
+const helmet = require('helmet'); //http security headers
 var cors = require('cors') //Allow CORS
+var logger = require('morgan'); //logging middleware
+require('dotenv').config(); //Load the .env config file
+//Router imports
+const APIrouter = require("./routes/APIrouter.js");
 
-/*
-  ExpressJS Server File
-*/
+// =================================================================
+
+// SERVER SETUP AND CONFIG
+
+//Set base url
+var BASE_URL = process.env.BASE_URL || "http://localhost";
+
+//Set cors headers and config
+var corsOptions = {
+  origin: "http://localhost:3000"
+};
 
 //Initialize expressJS
 const app = express();
@@ -18,13 +35,11 @@ const router = express.Router();
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-//You can set the environment variable NODE_ENV to either "production" or "development". It defaults to "development" if its not set.
-//Initialize the NODE_ENV with the bash command: NODE_ENV="development" node index.js 
+//You can set the environment variable NODE_ENV to either "production" or "development". 
+//It defaults to "development" if its not set.
 var MODE = process.env.NODE_ENV || "development";
 
-/**
- * Normalize a port into a number, string, or false.
- */
+//Normalize a port into a number, string, or false.
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
@@ -52,15 +67,22 @@ function defaultPortWarning() {
 
 // =================================================================
 
-//Enable All CORS Requests
-app.use(cors());
+// MIDDLEWARES
 
+//Enable All CORS Requests
+app.use(cors(corsOptions));
+//Set http security headers
+app.use(helmet());
+//Enable logging middleware based on mode
+if (MODE === "development") {
+  app.use(logger('dev'));
+} 
+else if (MODE === "production") {
+  app.use(logger('common'));
+}
 //For parsing application/json
 app.use(express.json());
-
-//Import and mount the API Router
-const APIrouter = require("./APIrouter.js");
-
+//Mount the APIrouter
 //All routes will go to URL:PORT/api 
 app.use("/api", APIrouter);
 
@@ -73,7 +95,7 @@ app.listen(port, () => {
     console.log(`${defaultPortWarning()}`);
     console.log(`ExpressJS server started...`);
     console.log(`Mode: ${MODE}`);
-    console.log(`Listening on "http://localhost:${port}"...`);
+    console.log(`Listening on "${BASE_URL}:${port}"...`);
     console.log("------------"); 
     console.log(`Use CTRL+C to stop the server...`);
   });
