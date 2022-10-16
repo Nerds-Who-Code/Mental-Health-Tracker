@@ -2,7 +2,7 @@
 
 In the project ./server/ directory, you can run:
 
-### `clear && node index.js`
+### `clear && node ./src/index.js`
 or
 ### `npm start`
 or

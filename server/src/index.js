@@ -9,7 +9,12 @@ var cors = require('cors') //Allow CORS
 var logger = require('morgan'); //logging middleware
 require('dotenv').config(); //Load the .env config file
 //Router imports
-const APIrouter = require("./routes/APIrouter.js");
+const APIrouter = require("./routes/APIrouter.js"); // DEPRECATED OLD --TODO: DELETE
+const topRouter = require("./routes/topRouter.js");
+const userRouter = require("./routes/entryRouter.js");
+const entryRouter = require("./routes/userRouter.js");
+const { getUserByPasswd } = require('./controllers/mockAPI.js');
+
 
 // =================================================================
 
@@ -22,6 +27,14 @@ var BASE_URL = process.env.BASE_URL || "http://localhost";
 var corsOptions = {
   origin: "http://localhost:3000"
 };
+
+//Information about routes / routers
+const routingTable = [
+  {route: "/api", name: APIrouter},
+  {route: "/api", name: topRouter},
+  {route: "/api/user", name: userRouter},
+  {route: "/api/user/entry", name: entryRouter},
+];
 
 //Initialize expressJS
 const app = express();
@@ -82,9 +95,17 @@ else if (MODE === "production") {
 }
 //For parsing application/json
 app.use(express.json());
-//Mount the APIrouter
-//All routes will go to URL:PORT/api 
+//Mount all the routers. See routing table for info.
+for (let i = 0; i < routingTable; i++)
+{
+  let a = 0; //tmp
+  //app.use(routingTable[i].route, routingTable[i].name);
+}
+
 app.use("/api", APIrouter);
+//app.use("/api", topRouter);
+app.use("/api/user", userRouter);
+app.use("/api/user/entry", entryRouter);
 
 // =================================================================
 

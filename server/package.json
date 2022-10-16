@@ -4,7 +4,7 @@
   "description": "mental-health-tracker-back-end",
   "main": "index.js",
   "scripts": {
-    "start": "clear && nodemon -r dotenv/config index.js"
+    "start": "clear && nodemon -r dotenv/config ./src/index.js"
   },
   "author": "Nerds Who Code",
   "license": "MIT",
