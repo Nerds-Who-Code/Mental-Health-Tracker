@@ -32,7 +32,8 @@ async function getUserID(username) {
     return result.rows[0].user_id;
 }
 
-//Returns full_name, age. Returns null if user not found
+//Returns full_name, age, email
+//Returns null if user not found
 async function getUserBasicInfo(username) {
     let result = await pool.query(
     `
@@ -54,6 +55,132 @@ async function getUserBasicInfo(username) {
     }
 
     return result.rows[0];
+}
+
+//username, user_id, account_creation_date can never be changed
+//This function does not allow password changes
+//to change last login user updateLastLogin function
+//Allowed values to be changed in this function: email, full_name, age
+//return true if user updated
+//return null if user not found
+async function updateUser(username, values)
+{
+    let result = null;
+    //change email
+    if ("email" in values) {
+        result = await pool.query(
+            `
+            UPDATE users
+            SET email = $1
+            WHERE username = $2
+            `,
+            [values.email, username]);
+    }
+
+    //change full_name
+    if ("full_name" in values) {
+        result = await pool.query(
+            `
+            UPDATE users
+            SET full_name = $1
+            WHERE username = $2
+            `,
+            [values.full_name, username]);
+    }
+
+    //change age
+    if ("age" in values) {
+        result = await pool.query(
+            `
+            UPDATE users
+            SET age = $1
+            WHERE username = $2
+            `,
+            [values.age, username]);
+    }
+
+    if (!result) {
+        let err = new Error(`Error: SQL query failed.`);
+        console.log(err);
+        return err;
+    }
+
+    //User not found
+    if (!result.rows || !result.rows.length) {
+        console.log(`user: ${username} not found in database.`);
+        return null;
+    }
+
+    return true;
+}
+
+//return true if last login date updated
+//return null if user not found
+async function updateLastLogin(username) {
+    let newLoginDate = formatDateToStr(new Date(), "YYYY-MM-DD");
+    let result = await pool.query(
+        `
+        UPDATE users
+        SET last_login_date = $1::date
+        WHERE username = $2
+        `,
+        [newLoginDate, username]);
+
+    if (!result) {
+        let err = new Error(`Error: SQL query failed.`);
+        console.log(err);
+        return err;
+    }
+    //User not found
+    if (!result.rows || !result.rows.length) {
+        console.log(`user: ${username} not found in database.`);
+        return null;
+    }
+
+    return true;
+}
+
+//change password of a user
+//returns true if password changed
+async function changePassword(username, newPassword) {
+    //First hash the password with bcrypt before creating user
+    //Only the hash is stored in the database. The plaintext password is never stored.
+    try 
+    {
+        // generate the salt. The default salt rounds is 10.
+        const salt = await bcrypt.genSalt(10);
+        // create the hash (convert plaintext password to a hash)
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        // Replace the plaintext password of the user with their hashed version.
+        newPassword = hashedPassword;
+    } 
+    catch (error) 
+    {
+        console.log(error);
+        return error;
+    }
+
+    //Update the password
+    let result = await pool.query(
+        `
+        UPDATE users
+        SET user_password = $1
+        WHERE username = $2
+        `,
+        [newPassword, username]);
+
+    if (!result) {
+        let err = new Error(`Error: SQL query failed.`);
+        console.log(err);
+        return err;
+    }
+    //User not found
+    if (!result.rows || !result.rows.length) {
+        console.log(`user: ${username} not found in database.`);
+        return null;
+    }
+
+    return true;
 }
 
 //Returns true if password matches, returns false if not, returns null if user not found 
@@ -179,6 +306,7 @@ async function createUser(userData) {
 //Delete a user and all its data
 //Returns null if user not found
 //Returns true if user deleted
+//NOT COMPLETE YET
 async function deleteUser(username)
 {
     //First check if the exists
@@ -211,16 +339,11 @@ async function deleteUser(username)
     return true;
 }
 
-//LOL CAT
-//lolcat
 async function test() {
     console.log('testing...');
-    let result = await createUser({
-                            username: "lolcats",
-                            email: "lolcats@example.com",
-                            password: "lol",
-                            name: "LOL CAT",
-                            age: 25,
+    let result = await updateUser("test12dsd3", {
+                            full_name: "Santa man",
+                            email: "test@example.com",
                             }
     );
     console.log(result);
@@ -234,6 +357,9 @@ module.exports =
 {
     getUserID,
     getUserBasicInfo,
+    updateUser,
+    updateLastLogin,
+    changePassword,
     userAuthenthicate,
     checkEmailExists,
     createUser,
