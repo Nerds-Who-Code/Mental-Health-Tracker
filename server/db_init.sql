@@ -18,6 +18,12 @@ COMMENT ON DATABASE "feelsifyDB"
 -- Connect to the newly created database as current user
 \c feelsifyDB
 
+-- Grant full permissions on the database
+
+GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to postgres;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to postgres;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to postgres;
+
 -- create the tables
 -- some column names have table name in front of them to prevent using SQL keywords
 -- For a list of SQL keywords see: https://www.postgresql.org/docs/current/sql-keywords-appendix.html
@@ -62,7 +68,7 @@ VALUES (
     TO_DATE('2022-10-9', 'YYYY-MM-DD')
 );
 
--- create entries for the user
+-- create entries for the test user
 INSERT INTO entries(entry_id, user_id, entry_date, entry_type, entry_level, note)
 VALUES (
     uuid('3f336097-52f7-4520-8dd9-5d34b0a8c2ea'),
