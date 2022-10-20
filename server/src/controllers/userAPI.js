@@ -4,8 +4,6 @@ const bcrypt = require("bcrypt");
 const pool = require("../db_connection.js");
 //Import utility functions
 const { formatDateToStr, genUUID } = require("../util.js");
-//Import entryAPI
-const {} = require("./entryAPI.js");
 
 //returns null if user not found
 //returns uuid of user if found
@@ -35,13 +33,15 @@ async function getUserID(username) {
 //Returns full_name, age, email
 //Returns null if user not found
 async function getUserBasicInfo(username) {
+    let userID = await getUserID(username);
+
     let result = await pool.query(
     `
     SELECT full_name, age
-    FROM users
-    WHERE username = $1
+    FROM user_info
+    WHERE user_id = $1
     `,
-    [username]);
+    [userID]);
 
     if (!result) {
         let err = new Error(`Error: SQL query failed.`);
@@ -79,24 +79,26 @@ async function updateUser(username, values)
 
     //change full_name
     if ("full_name" in values) {
+        let userID = await getUserID(username);
         result = await pool.query(
             `
-            UPDATE users
+            UPDATE user_info
             SET full_name = $1
-            WHERE username = $2
+            WHERE user_id = $2
             `,
-            [values.full_name, username]);
+            [values.full_name, userID]);
     }
 
     //change age
     if ("age" in values) {
+        let userID = await getUserID(username);
         result = await pool.query(
             `
-            UPDATE users
+            UPDATE user_info
             SET age = $1
-            WHERE username = $2
+            WHERE user_id = $2
             `,
-            [values.age, username]);
+            [values.age, userID]);
     }
 
     if (!result) {
@@ -105,26 +107,21 @@ async function updateUser(username, values)
         return err;
     }
 
-    //User not found
-    if (!result.rows || !result.rows.length) {
-        console.log(`user: ${username} not found in database.`);
-        return null;
-    }
-
     return true;
 }
 
 //return true if last login date updated
 //return null if user not found
 async function updateLastLogin(username) {
+    let userID = await getUserID(username);
     let newLoginDate = formatDateToStr(new Date(), "YYYY-MM-DD");
     let result = await pool.query(
         `
-        UPDATE users
+        UPDATE user_metadata
         SET last_login_date = $1::date
-        WHERE username = $2
+        WHERE user_id = $2
         `,
-        [newLoginDate, username]);
+        [newLoginDate, userID]);
 
     if (!result) {
         let err = new Error(`Error: SQL query failed.`);
@@ -250,8 +247,8 @@ async function checkEmailExists(email) {
 //returns true if user is created
 async function createUser(userData) {
     //First check if the user already exists
-    let userID = await getUserID(userData.username);
-    if (userID !== null) {
+    let existing_userID = await getUserID(userData.username);
+    if (existing_userID !== null) {
         return null;
     }
     //User can be created
@@ -273,27 +270,49 @@ async function createUser(userData) {
             console.log(error);
             return error;
         }
-        
+        //Create the unique user id (can never be changed)
+        let userID = genUUID();
         //Set the user account creation date (last login date will be same as creation date)
         let creation_date = formatDateToStr(new Date(), "YYYY-MM-DD");
         //Add the new user to the database
-        let result = await pool.query(
+        //Add core user data
+        let core = await pool.query(
             `
-            INSERT INTO users(user_id, username, email, user_password, full_name, age, last_login_date, account_creation_date)
+            INSERT INTO users(user_id, username, email, user_password)
             VALUES (
                 $1::uuid,
                 $2,
                 $3,
-                $4,
-                $5,
-                $6,
-                $7::date,
-                $8::date
+                $4
             )
             `,
-            [genUUID(), userData.username, userData.email, userData.password, userData.name, userData.age, creation_date, creation_date]);
+            [userID, userData.username, userData.email, userData.password]);
     
-        if (!result) {
+        //Add user info
+        let info = await pool.query(
+        `
+        INSERT INTO user_info(user_id, full_name, age)
+        VALUES (
+            $1::uuid,
+            $2,
+            $3
+        )
+        `,
+        [userID, userData.name, userData.age]);
+
+        //Add user metadata
+        let metadata = await pool.query(
+        `
+        INSERT INTO user_metadata(user_id, last_login_date, account_creation_date)
+        VALUES (
+            $1::uuid,
+            $2::date,
+            $3::date
+        )
+        `,
+        [userID, creation_date, creation_date]);
+
+        if (!core || !info || !metadata) {
             let err = new Error(`Error: SQL query failed.`);
             console.log(err);
             return err;
@@ -304,53 +323,34 @@ async function createUser(userData) {
 }
 
 //Delete a user and all its data
+//NOTE: When a user row is deleted in PSQL, 
+//then all relationship(references) rows in other tables will be automatically deleted
 //Returns null if user not found
 //Returns true if user deleted
-//NOT COMPLETE YET
 async function deleteUser(username)
 {
-    //First check if the exists
-    let userID = await getUserID(userData.username);
+    //First check if the user the exists
+    let userID = await getUserID(username);
     if (userID === null) {
         return null;
     }
-
-    //Get all the entry IDs to delete
-
-
-
     //Delete user
     let result = await pool.query(
         `
         DELETE FROM users
-
-        
+        WHERE username = $1
         `,
-        []);
+        [username]);
 
     if (!result) {
         let err = new Error(`Error: SQL query failed.`);
         console.log(err);
         return err;
     }
-
     //user deleted
     console.log(`User with ${username} deleted.`);
     return true;
 }
-
-async function test() {
-    console.log('testing...');
-    let result = await updateUser("test12dsd3", {
-                            full_name: "Santa man",
-                            email: "test@example.com",
-                            }
-    );
-    console.log(result);
-    console.log("Done.");
-}
-
-test();
 
 //Export all the functions
 module.exports = 
