@@ -68,13 +68,18 @@ async function updateUser(username, values)
     let result = null;
     //change email
     if ("email" in values) {
-        result = await pool.query(
-            `
-            UPDATE users
-            SET email = $1
-            WHERE username = $2
-            `,
-            [values.email, username]);
+        //First check if the email already exists in the database
+        let isEmailExist = await checkEmailExists(values.email);
+        if (isEmailExist === false)
+        {
+            result = await pool.query(
+                `
+                UPDATE users
+                SET email = $1
+                WHERE username = $2
+                `,
+                [values.email, username]);
+        }
     }
 
     //change full_name
@@ -138,9 +143,10 @@ async function updateLastLogin(username) {
 }
 
 //change password of a user
-//returns true if password changed
+//This function assumes the user is already authorized to do so
+//returns true if password changed, return false if not
 async function changePassword(username, newPassword) {
-    //First hash the password with bcrypt before creating user
+    //First hash the password with bcrypt before changing passowrd
     //Only the hash is stored in the database. The plaintext password is never stored.
     try 
     {
@@ -174,7 +180,7 @@ async function changePassword(username, newPassword) {
     //User not found
     if (!result.rows || !result.rows.length) {
         console.log(`user: ${username} not found in database.`);
-        return null;
+        return false;
     }
 
     return true;
@@ -206,21 +212,19 @@ async function userAuthenthicate(username, password) {
     {
         const isPasswdEqual = await bcrypt.compare(password, result.rows[0].user_password);
         if (isPasswdEqual === false) {
-            console.log("Password wrong");
             return false;
         }
-        console.log("Password matches");
         return true;
     }
     catch (error)
     {
-        console.log(e);
-        return e;
+        console.log(error);
+        return error;
     }
 }
 
 //Checks if the given email exists in the database
-//Returns found email if yes, returns null if not.
+//Returns true if yes, returns false if not.
 async function checkEmailExists(email) {
     let result = await pool.query(
         `
@@ -237,10 +241,10 @@ async function checkEmailExists(email) {
     }
     //e-mail not found
     if  (!result.rows || !result.rows.length) {
-        return null;
+        return false;
     }
     //e-mail found
-    return result.rows[0].email;
+    return true;
 }
 
 //returns null if user already exists
@@ -249,6 +253,11 @@ async function createUser(userData) {
     //First check if the user already exists
     let existing_userID = await getUserID(userData.username);
     if (existing_userID !== null) {
+        return null;
+    }
+    //Check if e-mail is already in use.
+    let isEmailExist = await checkEmailExists(userData.email);
+    if (isEmailExist === true) {
         return null;
     }
     //User can be created
@@ -317,6 +326,7 @@ async function createUser(userData) {
             console.log(err);
             return err;
         }
+        
         console.log(`New user created with username: ${userData.username}`);
         return true;
     }
