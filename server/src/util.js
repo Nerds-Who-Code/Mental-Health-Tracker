@@ -24,7 +24,7 @@ function formatDateToStr(date, format="YYYY-MM-DD", seperator="-") {
         case "YYYYMMDD":
             return (date.getFullYear() + (date.getMonth()+1) + date.getDate());
         default: 
-            return "Error: Date format not correct."
+            return new Error("Error: Date format not correct.");
     }
 }
 

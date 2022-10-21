@@ -11,10 +11,8 @@ require('dotenv').config(); //Load the .env config file
 //Router imports
 const APIrouter = require("./routes/APIrouter.js"); // DEPRECATED OLD --TODO: DELETE
 const topRouter = require("./routes/topRouter.js");
-const userRouter = require("./routes/entryRouter.js");
-const entryRouter = require("./routes/userRouter.js");
-const { getUserByPasswd } = require('./controllers/mockAPI.js');
-
+const userRouter = require("./routes/userRouter.js");
+const entryRouter = require("./routes/entryRouter.js");
 
 // =================================================================
 
@@ -30,10 +28,10 @@ var corsOptions = {
 
 //Information about routes / routers
 const routingTable = [
-  {route: "/api", name: APIrouter},
-  {route: "/api", name: topRouter},
-  {route: "/api/user", name: userRouter},
-  {route: "/api/user/entry", name: entryRouter},
+  //{route: '/api', name: APIrouter},
+  //{route: '/api', name: topRouter},
+  {route: '/api/user', name: userRouter},
+  {route: '/api/user/entry', name: entryRouter}
 ];
 
 //Initialize expressJS
@@ -84,6 +82,7 @@ function defaultPortWarning() {
 
 //Enable All CORS Requests
 app.use(cors(corsOptions));
+//app.use(cors());
 //Set http security headers
 app.use(helmet());
 //Enable logging middleware based on mode
@@ -96,16 +95,25 @@ else if (MODE === "production") {
 //For parsing application/json
 app.use(express.json());
 //Mount all the routers. See routing table for info.
-for (let i = 0; i < routingTable; i++)
+for (let i = 0; i < routingTable.length; i++)
 {
-  let a = 0; //tmp
-  //app.use(routingTable[i].route, routingTable[i].name);
+  app.use(routingTable[i].route, routingTable[i].name);
 }
 
-app.use("/api", APIrouter);
-//app.use("/api", topRouter);
-app.use("/api/user", userRouter);
-app.use("/api/user/entry", entryRouter);
+//Basic server response test
+app.get('/test', async (req, res, next) => {
+  console.log("Received test.");
+  try
+  {
+      return res.status(201).send("Test success");
+  }
+  catch (error)
+  {
+      console.log("Test failed.");
+      console.log("500: Internal server error - " + error.message);
+      res.status(500).send(error.message);
+  }
+});
 
 // =================================================================
 
