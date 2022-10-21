@@ -1,4 +1,5 @@
-const express = require('express');
+const express   = require('express');
+const rateLimit = require('express-rate-limit'); //Rate limiter
 const {getUserBasicInfo,
        userAuthenthicate, 
        createUser,
@@ -7,6 +8,15 @@ const {getUserBasicInfo,
 // Create the user router.
 // The base URL for this router is URL:PORT/api/user/
 const userRouter = express.Router();
+
+//Limit the amount of times a user can create an account
+const createAccountLimiter = rateLimit({
+	windowMs: 60 * 60 * 1000, // 1 hour
+	max: 5, // Limit each IP to 5 create account requests per 'window' (here, per hour)
+	message: 'Too many accounts created from this IP, please try again after an hour',
+	standardHeaders: true, // Return rate limit info in the 'RateLimit-*' headers
+	legacyHeaders: false, // Disable the 'X-RateLimit-*' headers
+});
 
 // All routes should be wrapped up in try - catch blocks to prevent the entire server from crashing upon errors.
 
@@ -30,10 +40,28 @@ userRouter.get('/get-info/:username', async (req, res, next) => {
     }
 });
 
-userRouter.put('/login', async (req, res, next) => {
+userRouter.post('/login', async (req, res, next) => {
     try
     {
         let result = await userAuthenthicate(req.body.username, req.body.password);
+        if (result instanceof Error || result === null) 
+        {
+            return res.status(404).send(null);
+        }
+        return res.status(201).send(result);
+
+    }
+    catch (error)
+    {
+        console.log("500: Internal server error - " + error.message);
+        res.status(500).send(error.message);
+    }
+});
+
+userRouter.post('/signup', createAccountLimiter, async (req, res, next) => {
+    try
+    {
+        let result = await createUser(req.body.userData);
         if (result instanceof Error || result === null) 
         {
             return res.status(404).send(null);
@@ -57,24 +85,6 @@ userRouter.put('/update-info', async (req, res, next) => {
             return res.status(404).send(null);
         }
         return res.status(201).send(result);
-    }
-    catch (error)
-    {
-        console.log("500: Internal server error - " + error.message);
-        res.status(500).send(error.message);
-    }
-});
-
-userRouter.post('/create', async (req, res, next) => {
-    try
-    {
-        let result = await createUser(req.body.userData);
-        if (result instanceof Error || result === null) 
-        {
-            return res.status(404).send(null);
-        }
-        return res.status(201).send(result);
-
     }
     catch (error)
     {

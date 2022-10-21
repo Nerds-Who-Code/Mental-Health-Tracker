@@ -27,10 +27,11 @@ server/.nyc_output
 .env.test.local
 .env.production.local
 /server/.env
-/server/serverlog.txt
-/server/logs/serverlog.txt
 
+# Logs
+/server/logs/*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
 client/package-lock.json

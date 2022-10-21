@@ -3,15 +3,27 @@
 */
 
 //Imports
-const express = require('express');
-const helmet = require('helmet'); //http security headers
-var cors = require('cors') //Allow CORS
-var logger = require('morgan'); //logging middleware
-require('dotenv').config(); //Load the .env config file
+const express      = require('express');
+//http security headers
+const helmet       = require('helmet'); 
+//Allow CORS
+var cors           = require('cors');
+//Rate limiter
+const rateLimit    = require('express-rate-limit');
+//logging middleware
+var logger         = require('morgan');
+var path           = require('path');
+//Rotating file logging
+const rfs          = require("rotating-file-stream"); 
+var cookieParser   = require('cookie-parser');
+//only use lowercase paths
+var lowercasePaths = require('express-lowercase-paths');
+//Load the .env config file
+require('dotenv').config(); 
 //Router imports
 const APIrouter = require("./routes/APIrouter.js"); // DEPRECATED OLD --TODO: DELETE
-const topRouter = require("./routes/topRouter.js");
-const userRouter = require("./routes/userRouter.js");
+const topRouter   = require("./routes/topRouter.js");
+const userRouter  = require("./routes/userRouter.js");
 const entryRouter = require("./routes/entryRouter.js");
 
 // =================================================================
@@ -34,8 +46,28 @@ const routingTable = [
   {route: '/api/user/entry', name: entryRouter}
 ];
 
+// Create a rotating write stream
+var serverLogStream = rfs.createStream('server.log', {
+  interval: '1d', // rotate daily
+  path: path.join(__dirname, '/server/logs/')
+});
+
+//Set config and settings for the global API rate limiter
+const rateLimiterAPI = rateLimit({
+	windowMs: process.env.TIME_PER_WINDOW * 60 * 1000, // TIME_PER_WINDOW is in minutes
+	max: process.env.MAX_REQUESTS_PER_WINDOW, // Limit each IP to number of requests per 'window'
+  message: 'Too many requests. You are being limited. Try again later.',
+	standardHeaders: true, // Return rate limit info in the 'RateLimit-*' headers
+	legacyHeaders: false, // Disable the 'X-RateLimit-*' headers
+});
+
+// =================================================================
+
 //Initialize expressJS
 const app = express();
+//Number of proxies between express server and the client
+//This is to make the rate limiter ignore proxy requests
+app.set('trust proxy', 1);
 //Initialize express router
 const router = express.Router();
 
@@ -87,13 +119,22 @@ app.use(cors(corsOptions));
 app.use(helmet());
 //Enable logging middleware based on mode
 if (MODE === "development") {
+  //:method :url :status :response-time ms - :res[content-length]
   app.use(logger('dev'));
 } 
 else if (MODE === "production") {
+  //:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]
   app.use(logger('common'));
 }
+//Log to file
+app.use(logger('combined', { stream: serverLogStream }));
 //For parsing application/json
 app.use(express.json());
+//Apply the rate limiter to API calls only
+app.use('/api', rateLimiterAPI);
+//change all uppercase letters in a path to lowercase 
+//preserves uppercase in url queries, but NOT in url params
+app.use(lowercasePaths());
 //Mount all the routers. See routing table for info.
 for (let i = 0; i < routingTable.length; i++)
 {
@@ -105,7 +146,7 @@ app.get('/test', async (req, res, next) => {
   console.log("Received test.");
   try
   {
-      return res.status(201).send("Test success");
+      return res.status(201).send("Test success from IP: " + req.ip);
   }
   catch (error)
   {
