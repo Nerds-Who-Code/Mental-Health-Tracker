@@ -5,8 +5,59 @@ const pool = require("../db_connection.js");
 //Import utility functions
 const { formatDateToStr, genUUID } = require("../util.js");
 
+//Returns user_id, usrname of user if found
+//returns null if user not found
+//returns error if error
+async function checkUserExists(userID) {
+    let result = await pool.query(
+        `
+        SELECT user_id, username
+        FROM users
+        WHERE user_id = $1
+        `,
+        [userID]);
+
+    if (!result) {
+        let err = new Error(`Error: SQL query failed.`);
+        console.log(err);
+        return err;
+    }
+    //user not found
+    if  (!result.rows || !result.rows.length) {
+        return null;
+    }
+
+    return result.rows[0];
+}
+
+//Get the username by the provided userID
+async function getUserNameByID(userID) {
+    let result = await pool.query(
+        `
+        SELECT username
+        FROM users
+        WHERE user_id = $1
+        `,
+        [userID]);
+
+    if (!result) {
+        let err = new Error(`Error: SQL query failed.`);
+        console.log(err);
+        return err;
+    }
+    //user not found
+    if  (!result.rows || !result.rows.length) {
+        return null;
+    }
+
+    return result.rows[0].username;
+}
+
+//This is similar to checkUserExists except that username is used instead of user_id
+//This function assumes the userID is not known yet, but username is.
 //returns null if user not found
 //returns uuid of user if found
+//returns error if error
 async function getUserID(username) {
     let result = await pool.query(
         `
@@ -186,11 +237,14 @@ async function changePassword(username, newPassword) {
     return true;
 }
 
-//Returns true if password matches, returns false if not, returns null if user not found 
+//Returns user_id and username if password matches, 
+//returns false if not, 
+//returns null if user not found 
+//returns error if error
 async function userAuthenthicate(username, password) {
     let result = await pool.query(
         `
-        SELECT user_password
+        SELECT user_id, user_password
         FROM users
         WHERE username = $1
         `,
@@ -214,7 +268,11 @@ async function userAuthenthicate(username, password) {
         if (isPasswdEqual === false) {
             return false;
         }
-        return true;
+        //return result.rows[0].user_id;
+        return {
+            user_id: result.rows[0].user_id,
+            username: username
+        };
     }
     catch (error)
     {
@@ -365,6 +423,8 @@ async function deleteUser(username)
 //Export all the functions
 module.exports = 
 {
+    checkUserExists,
+    getUserNameByID,
     getUserID,
     getUserBasicInfo,
     updateUser,

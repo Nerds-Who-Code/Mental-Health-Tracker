@@ -1,7 +1,0 @@
-::1 - - [21/Oct/2022:07:55:24 +0000] "GET /api/user/entry/get-entries/test123 HTTP/1.1" 404 173 "-" "PostmanRuntime/7.29.2"
-::1 - - [21/Oct/2022:07:55:41 +0000] "GET /api/user/entry/get-entries/test123 HTTP/1.1" 404 173 "-" "PostmanRuntime/7.29.2"
-::1 - - [21/Oct/2022:07:57:53 +0000] "GET /api/user/entry/get-all/test123 HTTP/1.1" 200 530 "-" "PostmanRuntime/7.29.2"
-::1 - - [21/Oct/2022:08:38:15 +0000] "GET /test HTTP/1.1" 201 25 "-" "PostmanRuntime/7.29.2"
-::ffff:192.168.254.105 - - [21/Oct/2022:08:39:44 +0000] "GET /test HTTP/1.1" 201 44 "-" "Mozilla/5.0 (Android 12; Mobile; rv:104.0) Gecko/104.0 Firefox/104.0"
-::ffff:192.168.254.105 - - [21/Oct/2022:08:41:58 +0000] "GET /test HTTP/1.1" 304 - "-" "Mozilla/5.0 (Android 12; Mobile; rv:104.0) Gecko/104.0 Firefox/104.0"
-::ffff:192.168.254.105 - - [21/Oct/2022:08:42:25 +0000] "GET /test HTTP/1.1" 304 - "-" "Mozilla/5.0 (Android 12; Mobile; rv:104.0) Gecko/104.0 Firefox/104.0"

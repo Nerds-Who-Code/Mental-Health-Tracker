@@ -1,5 +1,5 @@
-
 const express = require('express');
+const verifyUser = require('../middlewares/verifyUser.js');
 const {getEntries,
        addEntry,
        updateEntry,
@@ -11,7 +11,9 @@ const entryRouter = express.Router();
 
 // All routes should be wrapped up in try - catch blocks to prevent the entire server from crashing upon errors.
 
-entryRouter.get('/get-all/:username', async (req, res, next) => {
+//get all entries from a user
+entryRouter.get('/get-all/:username', verifyUser, async (req, res, next) => {
+    console.log("UserID?: " + JSON.stringify(req.session?.passport?.user));
     try
     {
         let result = await getEntries(req.params.username);
@@ -28,7 +30,7 @@ entryRouter.get('/get-all/:username', async (req, res, next) => {
     }
 });
 
-entryRouter.put('/update', async (req, res, next) => {
+entryRouter.put('/update', verifyUser, async (req, res, next) => {
     try
     {
         let result = await updateEntry(req.body.username, req.body.entryID, req.body.info);
@@ -45,7 +47,7 @@ entryRouter.put('/update', async (req, res, next) => {
     }
 });
 
-entryRouter.post('/create', async (req, res, next) => {
+entryRouter.post('/create', verifyUser, async (req, res, next) => {
     try
     {
         let result = await addEntry(req.body.username, req.body.entry);
@@ -65,7 +67,7 @@ entryRouter.post('/create', async (req, res, next) => {
 //NOTE: Ideally the username and entryID should be in req.body.username for extra security/anonimity
 //but many servers and proxies remove the req.body from DELETE requests
 //That's why DELETE becomes a url parameter instead
-entryRouter.delete('/delete/:username/:entryID', async (req, res, next) => {
+entryRouter.delete('/delete/:username/:entryID', verifyUser, async (req, res, next) => {
     try 
     {
         let result = await deleteEntry(req.params.username, req.params.entryID);

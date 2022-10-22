@@ -13,12 +13,13 @@ You have the option to track 3 types of mental health.
 
 ### How to get the app started:
 
-1. Create the PostGreSQL database called feelsifyDB.
-2. Run the db_init.sql script in PSQL for the database.
-3. Install all node modules with the script `./install-node-modules.sh`
-4. Use `npm start` in the root folder. 
+0. Install and configure PostGreSQL and start the PSQL server.
+1. Run the `setup.sh`* script.
+2. Rename `server/sample.env` to `/server/.env` and edit config accordingly.
+3. Use `npm start` in the root folder. 
 
-Steps 1 to 3 only need to be done one time.
+Steps 0 to 3 only need to be done one time.
+*You may first need to make the bash script executable with the command `chmod u+x setup.sh`
 
 ### Directories
 

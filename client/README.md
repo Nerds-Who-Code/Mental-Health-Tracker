@@ -1,4 +1,4 @@
-# Getting Started
+# Getting Started with the Feelsify client
 
 In the project ./client/ directory, you can run:
 
@@ -12,8 +12,7 @@ You may also see any lint errors in the console.
 
 ### How to login:
 
-You can use any account in ./client/mockData.js to login. Just use the values of username and password.
-The easiest account to login is:
+The test account to login is:
 username: test123
 password: test
 
