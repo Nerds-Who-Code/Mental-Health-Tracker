@@ -1,6 +1,7 @@
 const express   = require('express');
 const passport  = require('passport');
 const rateLimit = require('express-rate-limit'); //Rate limiter
+const verifyUser = require('../middlewares/verifyUser.js');
 const {getUserBasicInfo,
        createUser,
        updateUser} = require('../controllers/userAPI.js');
@@ -23,7 +24,7 @@ const createAccountLimiter = rateLimit({
 //NOTE: Ideally the username should be in req.body.username for extra security/anonimity
 //but many servers and proxies remove the req.body from GET requests
 //That's why GET becomes a url parameter instead
-userRouter.get('/get-info/:username', async (req, res, next) => {
+userRouter.get('/get-info/:username', verifyUser, async (req, res, next) => {
     try
     {
         let result = await getUserBasicInfo(req.params.username);
@@ -92,7 +93,7 @@ userRouter.post('/signup', createAccountLimiter, async (req, res, next) => {
     }
 });
 
-userRouter.put('/update-info', async (req, res, next) => {
+userRouter.put('/update-info', verifyUser, async (req, res, next) => {
     console.log("Authenthicated: " + req.isAuthenticated());
     try
     {

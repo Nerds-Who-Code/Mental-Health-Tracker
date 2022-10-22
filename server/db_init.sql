@@ -13,7 +13,7 @@ CREATE DATABASE "feelsifyDB"
     IS_TEMPLATE = False;
 
 COMMENT ON DATABASE "feelsifyDB"
-    IS 'The database for the Feelsify Mental healt tracker app';
+    IS 'The database for the Feelsify Mental health tracker app';
 
 -- Connect to the newly created database as current user
 \c feelsifyDB
