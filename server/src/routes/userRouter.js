@@ -1,7 +1,7 @@
 const express   = require('express');
+const passport  = require('passport');
 const rateLimit = require('express-rate-limit'); //Rate limiter
 const {getUserBasicInfo,
-       userAuthenthicate, 
        createUser,
        updateUser} = require('../controllers/userAPI.js');
 
@@ -40,15 +40,17 @@ userRouter.get('/get-info/:username', async (req, res, next) => {
     }
 });
 
-userRouter.post('/login', async (req, res, next) => {
+userRouter.post('/login', passport.authenticate('local'), async (req, res, next) => {
     try
     {
-        let result = await userAuthenthicate(req.body.username, req.body.password);
-        if (result instanceof Error || result === null) 
-        {
-            return res.status(404).send(null);
-        }
-        return res.status(201).send(result);
+        console.log(req.user);
+        res.status(201).send(req.user);
+        // let result = await userAuthenthicate(req.body.username, req.body.password);
+        // if (result instanceof Error || result === null) 
+        // {
+        //     return res.status(404).send(null);
+        // }
+        // return res.status(201).send(result);
 
     }
     catch (error)
@@ -56,6 +58,20 @@ userRouter.post('/login', async (req, res, next) => {
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }
+});
+
+userRouter.post('/logout', (req, res, next) => {
+    console.log("Before");
+    console.log(req.isAuthenticated());
+    req.logout(function(err) {
+        if (err) { 
+            return next(err); 
+        }
+    });
+    console.log("After");
+    console.log(req.isAuthenticated());
+    res.status(201).send("Logged out.");
+    
 });
 
 userRouter.post('/signup', createAccountLimiter, async (req, res, next) => {
@@ -77,6 +93,7 @@ userRouter.post('/signup', createAccountLimiter, async (req, res, next) => {
 });
 
 userRouter.put('/update-info', async (req, res, next) => {
+    console.log("Authenthicated: " + req.isAuthenticated());
     try
     {
         let result = await updateUser(req.body.username, req.body.info);

@@ -3,21 +3,27 @@
 */
 
 //Imports
-const express      = require('express');
+const express        = require('express');
 //http security headers
-const helmet       = require('helmet'); 
+const helmet         = require('helmet'); 
 //Allow CORS
-var cors           = require('cors');
+var cors             = require('cors');
 //Rate limiter
-const rateLimit    = require('express-rate-limit');
+const rateLimit      = require('express-rate-limit');
 //logging middleware
-var logger         = require('morgan');
-var path           = require('path');
+var logger           = require('morgan');
+var path             = require('path');
 //Rotating file logging
-const rfs          = require("rotating-file-stream"); 
-var cookieParser   = require('cookie-parser');
+const rfs            = require("rotating-file-stream");
+//passport is a user authenthication middleware
+const passport       = require('passport');
+//Cookie handler middleware
+var cookieParser     = require('cookie-parser'); //OUTDATED?
+//User sessions middleware
+const expressSession = require('express-session');
+const pgSession      = require('connect-pg-simple')(expressSession);
 //only use lowercase paths
-var lowercasePaths = require('express-lowercase-paths');
+var lowercasePaths   = require('express-lowercase-paths');
 //Load the .env config file
 require('dotenv').config(); 
 //Router imports
@@ -25,6 +31,9 @@ const APIrouter = require("./routes/APIrouter.js"); // DEPRECATED OLD --TODO: DE
 const topRouter   = require("./routes/topRouter.js");
 const userRouter  = require("./routes/userRouter.js");
 const entryRouter = require("./routes/entryRouter.js");
+//Import connection for PostGreSQL
+const pool = require("./db_connection.js");
+const {checkUserExists, userAuthenthicate} = require("./controllers/userAPI.js");
 
 // =================================================================
 
@@ -49,7 +58,7 @@ const routingTable = [
 // Create a rotating write stream
 var serverLogStream = rfs.createStream('server.log', {
   interval: '1d', // rotate daily
-  path: path.join(__dirname, '/server/logs/')
+  path: path.join(__dirname, '../logs/')
 });
 
 //Set config and settings for the global API rate limiter
@@ -105,7 +114,7 @@ function defaultPortWarning() {
 	if (port === 3000) {
 		return `Warning: The set port is the default port: ${port}. This may cause errors in non-local deployments.`  
 	}
-	return "Success: The set port is not the default port.";
+	return "Server success: The set port is not the default port.";
 }
 
 // =================================================================
@@ -128,6 +137,73 @@ else if (MODE === "production") {
 }
 //Log to file
 app.use(logger('combined', { stream: serverLogStream }));
+//Handle cookies (needed for user sessions and user authenthication)
+app.use(cookieParser()); 
+//user sessions management (sessions are stored in the postgresql database)
+app.use(expressSession({
+  store: new pgSession({
+    pool: pool,                    // Connection pool to postgresql
+    tableName: 'user_sessions',    // tablename in postgresql to store sessions
+    createTableIfMissing: false    // the table is already created in db_init.sql
+  }),
+  secret: 'thisisatemporarysecret',
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, secure: false }, // 30 days
+  //Resave: Forces the session to be saved back to the session store, 
+  //even if the session was never modified during the request. Reccomended: False (more security)
+  resave: false,
+  //saveUninitialized: Forces a session that is “uninitialized” to be saved to the store. 
+  //A session is uninitialized when it is new but not modified Reccomended: False (more security)
+  saveUninitialized: false,
+}));
+//User authenthication middleware
+app.use(passport.initialize());
+//Persistent login sessions
+app.use(passport.session()); 
+
+/* -+- Passport authenthication functions -+- */
+
+var LocalStrategy = require('passport-local').Strategy;
+
+//Serialize a user into the the user session cookie
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+//Deserialize a user out of the user session cookie
+passport.deserializeUser(async (userObject, done) => {
+  let user = await checkUserExists(userObject.user_id);
+  if (user instanceof Error || user === null) {
+    //User not foud or error
+    done(user);
+  }
+  done(null, user);
+});
+  
+passport.use(new LocalStrategy(
+  {
+  //pass back the entire request to the callback
+  passReqToCallback: true
+  },
+  async function (req, username, password, done) {
+    let user = await userAuthenthicate(username, password);
+    if (user instanceof Error) {
+      done(user);
+    }
+
+    if (user === false || user === null) {
+        //Authenthication fail / wrong user credentials
+        done(null, false);
+    }
+
+    if ("user_id" in user)
+    {
+      //Authenthication success
+      done(null, user); 
+    }
+}));
+
+/* -+- -+- */
+
 //For parsing application/json
 app.use(express.json());
 //Apply the rate limiter to API calls only
@@ -142,11 +218,13 @@ for (let i = 0; i < routingTable.length; i++)
 }
 
 //Basic server response test
-app.get('/test', async (req, res, next) => {
+app.all('/test', async (req, res, next) => {
   console.log("Received test.");
   try
   {
-      return res.status(201).send("Test success from IP: " + req.ip);
+      console.log('session?');
+      console.log(req.session);
+      return res.status(200).send("Test success from IP: " + req.ip);
   }
   catch (error)
   {
@@ -159,12 +237,27 @@ app.get('/test', async (req, res, next) => {
 // =================================================================
 
 //Start server
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log("============");
-    console.log(`Starting server...`);
+    console.log(`Starting the Feelsify server...`);
+    console.log("Testing the PostGreSQL database connection...");
+
+    let test = await pool.query(
+      `
+      SELECT NOW() 
+      `);
+
+    if (!test || !test.rows || !test.rows.length ) {
+      let err = new Error(`Error: Database connection failed.`);
+      console.log(err);
+    }
+    else {
+      console.log(`Database connection success @ ${JSON.stringify(test.rows[0].now)}`);
+    }
     console.log(`${defaultPortWarning()}`);
     console.log(`ExpressJS server started...`);
     console.log(`Mode: ${MODE}`);
+    //console.log(`Server logs are in: ${path.join(__dirname, '../logs/')}`);
     console.log(`Listening on "${BASE_URL}:${port}"...`);
     console.log("------------"); 
     console.log(`Use CTRL+C to stop the server...`);

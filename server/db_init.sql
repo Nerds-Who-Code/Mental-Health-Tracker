@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS entry_events;
 DROP TABLE IF EXISTS entry_info;
 DROP TABLE IF EXISTS entries;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_sessions;
 
 -- Create the tables
 -- some column names have table name in front of them to prevent using SQL keywords
@@ -89,6 +90,18 @@ CREATE TABLE IF NOT EXISTS entry_events(
     entry_event     VARCHAR(12) NOT NULL
         CHECK(entry_event IN ('family', 'relationship', 'work', 'significant', 'trauma', 'unknown'))
 );
+
+-- used for storing the user-sessions. DO NOT EDIT THIS TABLE. This connects to Express middleware
+CREATE TABLE IF NOT EXISTS user_sessions (
+    sid     varchar NOT NULL COLLATE "default",
+    sess    json NOT NULL,
+    expire  timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE user_sessions ADD CONSTRAINT user_sessions_pkey PRIMARY KEY (sid) NOT DEFERRABLE INITIALLY IMMEDIATE;
+
+CREATE INDEX IDX_session_expire ON user_sessions (expire);
 
 -- ++++++++++++++++++++++DATA INSERTIONS+++++++++++++++++++++++++++++++++++++++++++
 
