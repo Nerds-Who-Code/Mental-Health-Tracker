@@ -3,10 +3,11 @@ var logger = require('morgan');
 var path   = require('path');
 //Rotating file logging
 const rfs  = require("rotating-file-stream");
+const {formatDateToStr} = require("../util.js");
 
 function logging(app) {
     // Create a rotating write stream
-    var serverLogStream = rfs.createStream('server.log', {
+    var serverLogStream = rfs.createStream(`${formatDateToStr(new Date(), "DD-MM-YYYY", "-")}-server.log`, {
         interval: '1d', // rotate daily
         path: path.join(__dirname, '../../logs/')
     });

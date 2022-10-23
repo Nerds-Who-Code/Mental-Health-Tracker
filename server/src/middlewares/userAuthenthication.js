@@ -14,7 +14,7 @@ function userAuthenthication(app, pool) {
           tableName: 'user_sessions',    // tablename in postgresql to store sessions
           createTableIfMissing: false    // the table is already created in db_init.sql
         }),
-        secret: 'thisisatemporarysecret',
+        secret: process.env.SESSION_SECRET,
         cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, secure: false }, // 30 days
         //Resave: Forces the session to be saved back to the session store, 
         //even if the session was never modified during the request. Reccomended: False (more security)

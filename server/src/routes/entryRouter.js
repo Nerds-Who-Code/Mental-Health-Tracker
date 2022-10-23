@@ -5,7 +5,7 @@ const {getEntries,
        updateEntry,
        deleteEntry} = require('../controllers/entryAPI.js');
 
-// Create the api router.
+// Create the entry router.
 // The base URL for this router is URL:PORT/api/user/entry/
 const entryRouter = express.Router();
 

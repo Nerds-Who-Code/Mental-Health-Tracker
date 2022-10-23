@@ -3,6 +3,7 @@ const APIrouter = require("../routes/APIrouter.js"); // DEPRECATED OLD --TODO: D
 const topRouter   = require("../routes/topRouter.js");
 const userRouter  = require("../routes/userRouter.js");
 const entryRouter = require("../routes/entryRouter.js");
+const dbStatsRouter = require("../routes/db_stats.js");
 
 function loadRouters(app)
 {
@@ -11,7 +12,8 @@ function loadRouters(app)
         //{route: '/api', name: APIrouter},
         {route: '/api', name: topRouter},
         {route: '/api/user', name: userRouter},
-        {route: '/api/user/entry', name: entryRouter}
+        {route: '/api/user/entry', name: entryRouter},
+        {route: '/api/statistics', name: dbStatsRouter}
     ];
 
     //Mount all the routers. See routing table for info.
