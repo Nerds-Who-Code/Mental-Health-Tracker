@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchEntries} from "../store";
+import {fetchEntries} from '../redux/entryDataSlice.js';
 import Chart from "chart.js/auto";
 import {Bar, Pie} from "react-chartjs-2";
 import ErrorBoundary from './ErrorBoundary';

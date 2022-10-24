@@ -7,7 +7,7 @@ import * as yup from 'yup' // Library for custom form validation
 const formSchema = yup.object().shape({
     nameInput: yup.string()
                     .min(3)
-                    .max(50)
+                    .max(35)
                     .required(),
     userNameInput: yup.string()
                     .min(3)
@@ -25,7 +25,7 @@ const formSchema = yup.object().shape({
     ageInput: yup.number()
                     .positive()
                     .integer()
-                    .min(1)
+                    .min(6)
                     .max(125)
                     .required(),
 });
@@ -51,7 +51,7 @@ export default function RegistrationContainer() {
         emailInput: false,
         passwordInput: false,
         ageInput: false,
-      });
+    });
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -117,7 +117,7 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                     minLength="3"
-                    maxLength="50"
+                    maxLength="35"
                 />
             </div>
             <div className="mb-6">
@@ -173,7 +173,7 @@ export default function RegistrationContainer() {
                     value={registrationState.ageInput}
                     onChange={handleChange}
                     required 
-                    min="1" 
+                    min="6" 
                     max="125"
                 /> 
                </div>

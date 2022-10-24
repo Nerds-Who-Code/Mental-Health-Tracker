@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteEntry} from '../store';
+import {deleteEntry} from '../redux/entryDataSlice.js';
 
 //This should be styled like a card.
 export default function Entry(props) {

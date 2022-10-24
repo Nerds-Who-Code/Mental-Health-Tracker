@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from "react-router-dom";
-import {addEntry} from '../store';
+import {addEntry} from '../redux/entryDataSlice.js';
 
 // This is used to temporally store the events of the entry before submit.
 const events = [];

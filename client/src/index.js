@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 //Load css
 import './index.css';
 //Import global state.
-import store from './store.js';
+import store from './redux/store.js';
 //Load React components
 import App from './App';
 import LandingPage from './components/LandingPage';
@@ -19,7 +19,6 @@ import AddEntryPage from './components/AddEntryPage';
 import ViewEntriesPage from './components/ViewEntriesPage';
 import EntryOverviewPage from './components/EntryOverviewPage';
 import AboutPage from './components/AboutPage';
-
 
 /*
   The Main Routing file for this app  

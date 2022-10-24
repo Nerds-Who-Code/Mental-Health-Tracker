@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
-import {loginUser} from '../store';
+import {loginUser} from '../redux/store';
 import axios from 'axios';
 
 export default function LoginContainer() {

@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from "react-router-dom";
-import {fetchEntries} from "../store";
+import {fetchEntries} from '../redux/entryDataSlice.js';
 import Entry from "./Entry";
 import NavBtnDefault from "./NavBtnDefault";
 
