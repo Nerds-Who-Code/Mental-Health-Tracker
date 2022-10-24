@@ -5,6 +5,7 @@
 # Set file permissions
 chmod u+x init_db.sh
 chmod u+x install-node-modules.sh
+chmod u+x ./server/start_server.sh
 
 echo "Setting up the app..."
 

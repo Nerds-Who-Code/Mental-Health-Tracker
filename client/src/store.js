@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
         await axios.put(
           `http://localhost:3001/api/loginUser/${data.username}`,
           { password: data.password }
-        )
+        );
 
       return response.data;
     } catch (error) {

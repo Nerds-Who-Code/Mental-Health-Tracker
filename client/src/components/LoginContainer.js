@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../store';
+import axios from 'axios';
 
 export default function LoginContainer() {
     // Used for navigating to different routes in the client without buttons
@@ -59,7 +60,7 @@ export default function LoginContainer() {
                 // 1. Server can not be reached.
                 // 2. User with that username is not found.
                 // 3. User is found, but password does not match the password of the user.
-                alert("Your username or password is wrong");
+                alert("Your username or password is wrong.");
             }
     }, [userDataGlobalState]);
 
@@ -68,13 +69,34 @@ export default function LoginContainer() {
         // prevents the browser from performing its default behavior when a form is submitted.
         // prevent page from refreshing
         e.preventDefault();
+        console.log(loginContainerState);
+        //let test = await axios.get()
         // Retrieve the user data from the server and store it in the global state. See store.js for how this happens.
-        dispatch(
-          loginUser({
-            username: loginContainerState.userNameInput, 
-            password: loginContainerState.passwordInput /**@todo passwords should be sent hashed/encrypted */
-          })
-        )
+        try {
+            let response = await axios.post(
+                `http://localhost:3001/api/user/login`,
+                {username: loginContainerState.userNameInput, password: loginContainerState.passwordInput}
+            );
+            if (response.status === 201) {
+                console.log("YAY");
+            }
+        }
+        catch (error)
+        {
+            console.log(error);
+        }
+        // else if (response instanceof Error)
+        // {
+        //     console.log("NO");
+        // }
+        //console.log(response);
+        
+        // dispatch(
+        //   loginUser({
+        //     username: loginContainerState.userNameInput, 
+        //     password: loginContainerState.passwordInput /**@todo passwords should be sent hashed/encrypted */
+        //   })
+        // )
     };
 
     return (
