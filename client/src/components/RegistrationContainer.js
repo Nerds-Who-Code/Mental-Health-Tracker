@@ -73,17 +73,13 @@ export default function RegistrationContainer() {
         // If the form is valid
         if(isFormValid) {
             //Transform the user inputs to the user data
-            //The userId will be generated on the server.
+            //Extra user data is generated on server
             userData = {
-                userId: 0,
                 name: registrationState.nameInput,
                 username: registrationState.userNameInput,
                 email: registrationState.emailInput,
                 password: registrationState.passwordInput,
-                age: registrationState.ageInput,
-                lastLogin: "0000-00-00", 
-                isLoggedIn: false,
-                entries: []
+                age: registrationState.ageInput
             };
         // If the form is not valid
         } else {
@@ -92,17 +88,17 @@ export default function RegistrationContainer() {
 
         //Registration code (send info to Back-end database)
         try {
-            //Ask the server to add a new user to the database || // eslint-disable-next-line
-            let createdUser = await axios.post(`http://localhost:3001/api/createUser/${registrationState.userNameInput}`, {user: userData});
+            //Ask the server to add a new user to the database.
+            await axios.post(`http://localhost:3001/api/user/signup`, 
+                {userData: userData});
             
-            alert("successfully registered");
+            alert("successfully registered.");
             //Send user back to the landing page after registration submit
             navigate("/")
         } catch (error) {
             console.log(error);
             alert("Something went wrong while creating your account.");
         }
-        //createUser(userData);
     }
 
     return (

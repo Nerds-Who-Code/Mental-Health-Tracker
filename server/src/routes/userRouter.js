@@ -77,10 +77,9 @@ userRouter.post('/signup', createAccountLimiter, async (req, res, next) => {
         let result = await createUser(req.body.userData);
         if (result instanceof Error || result === null) 
         {
-            return res.status(404).send(null);
+            return res.status(404).send(result);
         }
         return res.status(201).send(result);
-
     }
     catch (error)
     {
