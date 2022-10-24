@@ -44,7 +44,7 @@ userRouter.get('/get-info/:username', verifyUser, async (req, res, next) => {
 userRouter.post('/login', passport.authenticate('local'), async (req, res, next) => {
     try
     {
-        console.log(req.user);
+            //console.log(req.user);
         res.status(201).send(req.user);
         // let result = await userAuthenthicate(req.body.username, req.body.password);
         // if (result instanceof Error || result === null) 
@@ -62,15 +62,11 @@ userRouter.post('/login', passport.authenticate('local'), async (req, res, next)
 });
 
 userRouter.post('/logout', (req, res, next) => {
-    console.log("Before");
-    console.log(req.isAuthenticated());
     req.logout(function(err) {
         if (err) { 
             return next(err); 
         }
     });
-    console.log("After");
-    console.log(req.isAuthenticated());
     res.status(201).send("Logged out.");
     
 });

@@ -7,6 +7,7 @@ const express = require('express');
 //Middlewares
 const loadDefaultMiddlewares = require('./middlewares/defaultMiddlewares.js');
 const logging = require("./middlewares/logging.js");
+const debug = require("./middlewares/debug.js");
 const userAuthenthication = require("./middlewares/userAuthenthication.js");
 const rateLimiter = require('./middlewares/rateLimiter.js');
 const loadRouters = require('./middlewares/routes.js');
@@ -66,6 +67,7 @@ function defaultPortWarning() {
 // LOAD MIDDLEWARES
 loadDefaultMiddlewares(app);
 logging(app);
+if (process.env.NODE_ENV === 'development') {app.use(debug);}
 userAuthenthication(app, pool);
 rateLimiter(app);
 loadRouters(app);
