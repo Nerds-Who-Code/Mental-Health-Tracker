@@ -1,10 +1,17 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchEntries} from '../redux/entryDataSlice.js';
-import Chart from "chart.js/auto";
-import {Bar, Pie} from "react-chartjs-2";
+import Plot from 'react-plotly.js';
 import ErrorBoundary from './ErrorBoundary';
 import NavBtnDefault from "./NavBtnDefault";
+
+/*
+  PLOTLY DOCUMENTATION
+  https://plotly.com/javascript/react/
+  https://plotly.com/javascript/reference/layout/
+  https://plotly.com/javascript/configuration-options/
+  https://plotly.com/javascript/pie-charts/
+*/
 
 export default function EntryOverviewPage() {
   const dispatch = useDispatch();
@@ -125,71 +132,51 @@ export default function EntryOverviewPage() {
     }
   })();
 
-
+  //Plot settingss
+  const plotLayout = {width: 1000, height: 500, title: ''};
+  const plotConfig = {displaylogo: false};
 
     //The bar chart data that displays in the bar chart
-    const barChartLevelsData = {
-      labels: entryToChartData.dates,
-      datasets: [
-        {
-          label: "Stress",
-          backgroundColor: "rgb(255,255,0)", //YELLOW
-          borderColor: "rgb(255,255,0)",
-          data: entryToChartData.levels.stress
-        },
-        {
-          label: "Anxiety",
-          backgroundColor: "rgb(255,0,0)", //RED
-          borderColor: "rgb(255,0,0)",
-          data: entryToChartData.levels.anxiety
-        },
-        {
-          label: "Depression",
-          backgroundColor: "rgb(0,0,255)", //BLUE
-          borderColor: "rgb(0,0,255)",
-          data: entryToChartData.levels.depression
-        },
-      ],
-    };
+    const barChartLevelsData = [
+      {
+        type: 'bar', 
+        x: entryToChartData.dates, 
+        y: entryToChartData.levels.stress,
+        name: "Stress"
+      },
+      {
+        type: 'bar', 
+        x: entryToChartData.dates, 
+        y: entryToChartData.levels.anxiety,
+        name: "Anxiety"
+      },
+      {
+        type: 'bar', 
+        x: entryToChartData.dates, 
+        y: entryToChartData.levels.depression,
+        name: "Depression"
+      },
+      ];
 
-    //The Y Axis of the bar chart fixed at value 10 max
-    const options = {
-      scales: {
-        y: {
-          suggestedMin: 0,
-          suggestedMax: 10
-        }
-      }
-    }
+    //The pie chart type data that displays in the pie chart
+    const pieChartTypeData = [{
+      type: "pie",
+      values: [entryToChartData.typeCounts.stress, entryToChartData.typeCounts.anxiety, entryToChartData.typeCounts.depression],
+      labels: ["Stress", "Anxiety", "Depression"]
+    }];
 
     //The pie chart event data that displays in the pie chart
-    const pieChartTypeData = {
-      labels: ["Stress", "Anxiety", "Depression"],
-      datasets: [
-        {
-          backgroundColor: ["rgb(255,255,0)", "rgb(255,0,0)", "rgb(0,0,255)"], //YELLOW, RED, BLUE
-          borderColor: "rgb(0,0,0)", //BLACK
-          data: [entryToChartData.typeCounts.stress, entryToChartData.typeCounts.anxiety, entryToChartData.typeCounts.depression]
-        }
-      ],
-    };
-
-    //The pie chart event data that displays in the pie chart
-    const pieChartEventData = {
-      labels: ["family", "relationship", "work", "significant", "trauma", "unknown"],
-      datasets: [
-        {
-          backgroundColor: ["rgb(0,255,0)", "rgb(255,0,0)", "rgb(255,255,0)", "rgb(255,0,255)", "rgb(0,0,255)", "rgb(128,0,0)"], //GREEN, RED, YELLOW, PINK, BLUE, MAROON
-          borderColor: "rgb(0,0,0)", //BLACK
-          data: [entryToChartData.eventCounts.family,
-                 entryToChartData.eventCounts.relationship,
-                 entryToChartData.eventCounts.work,
-                 entryToChartData.eventCounts.significant,
-                 entryToChartData.eventCounts.trauma,
-                 entryToChartData.eventCounts.unknown]
-        }
-      ],
-    };
+    const pieChartEventData = [{
+      type: "pie",
+      values: [entryToChartData.eventCounts.family,
+              entryToChartData.eventCounts.relationship,
+              entryToChartData.eventCounts.work,
+              entryToChartData.eventCounts.significant,
+              entryToChartData.eventCounts.trauma,
+              entryToChartData.eventCounts.unknown
+            ],
+      labels: ["family", "relationship", "work", "significant", "trauma", "unknown"]
+    }];
 
     return (
         <div>
@@ -206,8 +193,12 @@ export default function EntryOverviewPage() {
                 Your mental health levels per day.
               </h2>
               <ErrorBoundary>
-                <div className="w-1/2">
-                  <Bar options={options} data={barChartLevelsData} />
+                <div className="plotContainer">
+                  <Plot 
+                    data={barChartLevelsData} 
+                    layout={plotLayout}
+                    config={plotConfig}
+                  />
                 </div>
               </ErrorBoundary>
               <h2 
@@ -215,8 +206,12 @@ export default function EntryOverviewPage() {
                 What types of mental health affect you the most.
               </h2>
               <ErrorBoundary>
-                <div className="w-1/4">
-                  <Pie data={pieChartTypeData} />
+                <div className="plotContainer">
+                  <Plot 
+                    data={pieChartTypeData} 
+                    layout={plotLayout}
+                    config={plotConfig}
+                  />
                 </div>
               </ErrorBoundary>
               <h2 
@@ -224,8 +219,12 @@ export default function EntryOverviewPage() {
                 Which events have affected you the most.
               </h2>
               <ErrorBoundary>
-                <div className="w-1/4">
-                  <Pie data={pieChartEventData} />
+                <div className="plotContainer">
+                  <Plot 
+                    data={pieChartEventData} 
+                    layout={plotLayout}
+                    config={plotConfig}
+                  />
                 </div>
               </ErrorBoundary>
             </div>
