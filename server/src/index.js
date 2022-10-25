@@ -36,6 +36,8 @@ app.set('trust proxy', 1);
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+const verboseLogging = false;
+
 //Normalize a port into a number, string, or false.
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -67,7 +69,7 @@ function defaultPortWarning() {
 // LOAD MIDDLEWARES
 loadDefaultMiddlewares(app);
 logging(app);
-if (process.env.NODE_ENV === 'development') {app.use(debug);}
+if (process.env.NODE_ENV === 'development' && verboseLogging === true) {app.use(debug);}
 userAuthenthication(app, pool);
 rateLimiter(app);
 loadRouters(app);

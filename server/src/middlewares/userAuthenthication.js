@@ -4,7 +4,7 @@ var LocalStrategy    = require('passport-local').Strategy;
 //User sessions middleware
 const expressSession = require('express-session');
 const pgSession      = require('connect-pg-simple')(expressSession);
-const {checkUserExists, userAuthenthicate} = require("../controllers/userAPI.js");
+const {checkUserExists, userAuthenthicate, updateLastLogin} = require("../controllers/userAPI.js");
 
 function userAuthenthication(app, pool) {
     //user sessions management (sessions are stored in the postgresql database)
@@ -22,6 +22,8 @@ function userAuthenthication(app, pool) {
         //saveUninitialized: Forces a session that is “uninitialized” to be saved to the store. 
         //A session is uninitialized when it is new but not modified Reccomended: False (more security)
         saveUninitialized: false,
+        sameSite: "none",
+        secure: false //HTTPS 
     }));
     //User authenthication middleware
     app.use(passport.initialize());
@@ -65,6 +67,8 @@ function userAuthenthication(app, pool) {
             if ("user_id" in user)
             {
                 //Authenthication success
+                //Update user last login info to now.
+                await updateLastLogin(user.user_id);
                 done(null, user); 
             }
         }

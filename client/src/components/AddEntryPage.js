@@ -10,7 +10,7 @@ export default function AddEntryPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     // Get the username from the global state.
-    const username = useSelector(state => state.userData.userInfo.username);
+    const userID = useSelector(state => state.userData.userInfo.user_id);
 
     // Values of all the input boxes
     // The values here are the default initialized values. (initial state)
@@ -101,20 +101,20 @@ export default function AddEntryPage() {
 
         // Transform the user inputs to the entry data
         // The entryId and date will be generated on the server.
+        // First remove null values from event array
+        const events = entryState.event.filter((event) => event !== null);
         let entryData = {
-            entryId: 0,
-            date: "0000-00-00",
             type: entryState.type,
             level: entryState.level,
-            event: entryState.event,
+            event: events,
             notes: entryState.note
         };
         //Dispatch action to the global state to tell the server to add the new entry.
-        dispatch(addEntry({username: username, entry: entryData}));
+        dispatch(addEntry({user_id: userID, entry: entryData}));
 
         alert("Your new entry has been added.");
         //Send user back to the dashboard after entry submit
-        navigate("/dashboard");
+        navigate("/view-entries");
     };
 
     // For JSX rendering

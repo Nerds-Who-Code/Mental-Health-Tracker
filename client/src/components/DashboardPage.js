@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchUserData} from '../redux/userDataSlice.js';
 import NavBtnDefault from './NavBtnDefault';
 
 export default function DashboardPage() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const userDataGlobalState = useSelector(state => state.userData.userInfo);
     const [name, setName] = useState("Your name should be here.");
 
@@ -17,12 +19,17 @@ export default function DashboardPage() {
             alert("Login required!");
             navigate("/");
         }
+        else if ("user_id" in userDataGlobalState)
+        {
+            //fetch more user data from server
+            dispatch(fetchUserData(userDataGlobalState.user_id));
+        }
     }, []);
 
     // Load username from global state when the component mounts
     useEffect( () => {
-        setName(userDataGlobalState.name);
-    }, [userDataGlobalState.name]);
+        setName(userDataGlobalState.full_name);
+    }, [userDataGlobalState.full_name]);
 
     return (
     <div className='flex flex-col items-center justify-center text-slate-800 my-16'>
@@ -36,7 +43,6 @@ export default function DashboardPage() {
         </div>
         {/* <Link to="/"><button className='px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'onClick={logOut}>Logout</button></Link> */}
     </div>
-);
-    
+    );
 }
 

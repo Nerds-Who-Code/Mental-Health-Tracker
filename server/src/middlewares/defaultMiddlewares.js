@@ -11,7 +11,9 @@ var cookieParser     = require('cookie-parser'); //OUTDATED?
 function loadDefaultMiddlewares(app) {
     //Set cors headers and config
     var corsOptions = {
-        origin: "http://localhost:3000"
+        origin: "http://localhost:3000",
+        //origin: '*',
+        credentials: true
     };
     //Enable All CORS Requests
     app.use(cors(corsOptions));

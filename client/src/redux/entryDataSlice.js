@@ -8,35 +8,36 @@ import { logoutUser } from './userDataSlice.js';
 
 // Fetch the entries from the server and store in global state
 export const fetchEntries = createAsyncThunk(
-    'userData/fetchEntries',
-    async (username) => {
+    'entryData/fetchEntries',
+    async (userID) => {
         // Ask the server fetch all entries from the user. See /server/APIrouter.js and /server/mockAPI.js to see how this works.
-        const response = await axios.get(`http://localhost:3001/api/getAllEntries/${username}`);
+        const response = await axios.get(`http://localhost:3001/api/user/entry/get-all/${userID}`, { withCredentials: true });
         return await response.data;
     }
 );
 
   // Delete entry from the server and store the updated entries in global state
 export const addEntry = createAsyncThunk(
-    'userData/addEntry',
+    'entryData/addEntry',
     // If there is more than 1 argument. 
     // Then the arguments to the action need to be wrapped up in a single object 
     // Because this function only accepts 1 argument.
-    async (data) => {
+    async (entryData) => {
         // Ask the server add an entry See /server/APIrouter.js and /server/mockAPI.js to see how this works.
-        const response = await axios.post(`http://localhost:3001/api/addEntry/${data.username}`,
-        { entry: data.entry });
+        const response = await axios.post(`http://localhost:3001/api/user/entry/create/`,
+            entryData,
+            { withCredentials: true });
         return await response.data;
     }
 );
 
   // Delete entry from the server and store the updated entries in global state
 export const deleteEntry = createAsyncThunk(
-    'userData/deleteEntry',
-    async (data) => {
+    'entryData/deleteEntry',
+    async (deleteInfo) => {
         // Ask the server to delete an entry. See /server/APIrouter.js and /server/mockAPI.js to see how this works.
         // The entryID of the deleted entry is send back as a result. Which is used to update the state.
-        const response = await axios.delete(`http://localhost:3001/api/deleteEntry/${data.username}/${data.entryId}`);
+        const response = await axios.delete(`http://localhost:3001/api/user/entry/delete/${deleteInfo.userID}/${deleteInfo.entryID}`, { withCredentials: true });
         return await response.data;
     }
 );
@@ -79,7 +80,7 @@ export const entryDataSlice = createSlice(
         })
         .addCase(deleteEntry.fulfilled, (state, action) => {
             //Delete the entry from the global state
-            state.entryInfo = state.entryInfo.filter((entry) => entry.entryId !== action.payload);
+            state.entryInfo = state.entryInfo.filter((entry) => entry.entry_id !== action.payload);
             state.status = "success";
         })
         .addCase(deleteEntry.rejected, (state) => {

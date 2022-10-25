@@ -83,9 +83,7 @@ async function getUserID(username) {
 
 //Returns full_name, age, email
 //Returns null if user not found
-async function getUserBasicInfo(username) {
-    let userID = await getUserID(username);
-
+async function getUserBasicInfo(userID) {
     let result = await pool.query(
     `
     SELECT full_name, age
@@ -168,8 +166,7 @@ async function updateUser(username, values)
 
 //return true if last login date updated
 //return null if user not found
-async function updateLastLogin(username) {
-    let userID = await getUserID(username);
+async function updateLastLogin(userID) {
     let newLoginDate = formatDateToStr(new Date(), "YYYY-MM-DD");
     let result = await pool.query(
         `
@@ -184,11 +181,12 @@ async function updateLastLogin(username) {
         console.log(err);
         return err;
     }
+    //This code is not neccesery in this function?
     //User not found
-    if (!result.rows || !result.rows.length) {
-        console.log(`user: ${username} not found in database.`);
-        return null;
-    }
+    // if (!result.rows || !result.rows.length) {
+    //     console.log(`user: ${userID} not found in database.`);
+    //     return null;
+    // }
 
     return true;
 }

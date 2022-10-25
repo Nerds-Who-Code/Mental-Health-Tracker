@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchEntries} from '../redux/entryDataSlice.js';
 import Chart from "chart.js/auto";
@@ -9,12 +8,12 @@ import NavBtnDefault from "./NavBtnDefault";
 
 export default function EntryOverviewPage() {
   const dispatch = useDispatch();
-  const username = useSelector(state => state.userData.userInfo.username);
+  const userID = useSelector(state => state.userData.userInfo.user_id);
   const entryDataGlobalState = useSelector(state => state.entryData);
 
   //Get all the user's entries when this component mounts.
   useEffect( () => {
-      dispatch(fetchEntries(username));
+      dispatch(fetchEntries(userID));
   }, []);
 
   // Insert an H3 if the data is still loading.
@@ -40,7 +39,7 @@ export default function EntryOverviewPage() {
 
   const entryToChartData = {
     //This maps the dates of all entries to the timelines/dates on the chart
-    dates: entryDataGlobalState.entryInfo.map( (entry) => entry.date),
+    dates: entryDataGlobalState.entryInfo.map( (entry) => entry.entry_date),
     levels: {
       stress: Array(entryDataGlobalState.entryInfo.length).fill(0),
       anxiety: Array(entryDataGlobalState.entryInfo.length).fill(0),
@@ -69,21 +68,21 @@ export default function EntryOverviewPage() {
   //Map entries to chart data
   (() => {
     for (let i = 0; i < entryDataGlobalState.entryInfo.length; i++) {
-      switch (entryDataGlobalState.entryInfo[i].type.toLowerCase()) {
+      switch (entryDataGlobalState.entryInfo[i].entry_type.toLowerCase()) {
         case "anxiety":
           //Map the levels of each type into an array
-          entryToChartData.levels.anxiety[i] = parseInt(entryDataGlobalState.entryInfo[i].level, 10);
+          entryToChartData.levels.anxiety[i] = parseInt(entryDataGlobalState.entryInfo[i].entry_level, 10);
           //Increase the count by 1 for each type found.
           entryToChartData.typeCounts.anxiety += 1;
           break;
         
         case "stress":
-          entryToChartData.levels.stress[i] = parseInt(entryDataGlobalState.entryInfo[i].level, 10);
+          entryToChartData.levels.stress[i] = parseInt(entryDataGlobalState.entryInfo[i].entry_level, 10);
           entryToChartData.typeCounts.stress += 1;
           break;
         
         case "depression":
-          entryToChartData.levels.depression[i] = parseInt(entryDataGlobalState.entryInfo[i].level, 10);
+          entryToChartData.levels.depression[i] = parseInt(entryDataGlobalState.entryInfo[i].entry_level, 10);
           entryToChartData.typeCounts.depression += 1;
           break;
         

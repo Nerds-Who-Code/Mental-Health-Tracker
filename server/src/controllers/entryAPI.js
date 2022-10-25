@@ -55,9 +55,7 @@ async function getEntry(username, entryID) {
 //Get all entries of a user
 //return null if entry or user not found
 //return is an array with objects same as the return from getEntry()
-async function getEntries(username) {
-    let userID = await getUserID(username);
-
+async function getEntries(userID) {
     let entries = await pool.query(
         `
         SELECT entries.entry_id, entry_date, entry_type, entry_level, note
@@ -99,9 +97,8 @@ async function getEntries(username) {
 }
 
 //add entry for a user
-//return true if entry added
-async function addEntry(username, entryData) {
-    let userID = await getUserID(username);
+//return entry info if entry added
+async function addEntry(userID, entryData) {
     //Generate the unique identifier for the entry
     let entryID = genUUID();
     let entryDate = formatDateToStr(new Date(), "YYYY-MM-DD");
@@ -126,7 +123,7 @@ async function addEntry(username, entryData) {
             $4
         )
         `,
-        [entryID, entryData.type, entryData.level, entryData.notes]);
+        [entryID, entryData.type.toLowerCase(), entryData.level, entryData.notes]);
 
     let entryEvents = null;
     for (let i = 0; i < entryData.event.length; i++)
@@ -155,7 +152,14 @@ async function addEntry(username, entryData) {
     }
 
     //Entry created
-    return true;
+    return {
+        entry_id: entryID,
+        entry_date: entryDate,
+        entry_level: entryData.type,
+        entry_type: entryData.level,
+        event: entryData.event,
+        note: entryData.notes,
+    };
 }
 
 //Update entry of a user
@@ -227,9 +231,8 @@ async function updateEntry(username, entryID, values) {
 
 //Delete entry of a user
 //return null if entry or user not found
-//return true if entry deleted
-async function deleteEntry(username, entryID) {
-    let userID = await getUserID(username);
+//return entryID if entry deleted
+async function deleteEntry(userID, entryID) {
     let result = await pool.query(
         `
         DELETE FROM entries
@@ -244,7 +247,7 @@ async function deleteEntry(username, entryID) {
         return err;
     }
     //entry deleted
-    return true;
+    return entryID;
 }
 
 //Export all the functions
