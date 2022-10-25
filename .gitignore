@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+node_modules
 /node_modules
 /client/node_modules
 /server/node_modules
@@ -9,20 +10,28 @@
 
 # testing
 /coverage
+/.nyc_output
+server/coverage
+server/.nyc_output
 
 # production
 /build
+/client/build
+/server/build
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-/server/serverlog.txt
-/server/logs/serverlog.txt
+/server/.env
 
+# Logs
+/server/logs/*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
 client/package-lock.json

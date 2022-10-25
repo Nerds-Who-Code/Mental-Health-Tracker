@@ -34,7 +34,7 @@ function App() {
   return (
       <div className="App">
         <ErrorBoundary>
-          <MainNavbar />
+          <MainNavbar /> 
         </ErrorBoundary>
         <Outlet />
       </div>

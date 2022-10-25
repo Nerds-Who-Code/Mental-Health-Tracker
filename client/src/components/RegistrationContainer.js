@@ -7,7 +7,7 @@ import * as yup from 'yup' // Library for custom form validation
 const formSchema = yup.object().shape({
     nameInput: yup.string()
                     .min(3)
-                    .max(50)
+                    .max(35)
                     .required(),
     userNameInput: yup.string()
                     .min(3)
@@ -25,7 +25,7 @@ const formSchema = yup.object().shape({
     ageInput: yup.number()
                     .positive()
                     .integer()
-                    .min(1)
+                    .min(6)
                     .max(125)
                     .required(),
 });
@@ -51,7 +51,7 @@ export default function RegistrationContainer() {
         emailInput: false,
         passwordInput: false,
         ageInput: false,
-      });
+    });
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -73,17 +73,13 @@ export default function RegistrationContainer() {
         // If the form is valid
         if(isFormValid) {
             //Transform the user inputs to the user data
-            //The userId will be generated on the server.
+            //Extra user data is generated on server
             userData = {
-                userId: 0,
                 name: registrationState.nameInput,
                 username: registrationState.userNameInput,
                 email: registrationState.emailInput,
                 password: registrationState.passwordInput,
-                age: registrationState.ageInput,
-                lastLogin: "0000-00-00", 
-                isLoggedIn: false,
-                entries: []
+                age: registrationState.ageInput
             };
         // If the form is not valid
         } else {
@@ -92,17 +88,17 @@ export default function RegistrationContainer() {
 
         //Registration code (send info to Back-end database)
         try {
-            //Ask the server to add a new user to the database || // eslint-disable-next-line
-            let createdUser = await axios.post(`http://localhost:3001/api/createUser/${registrationState.userNameInput}`, {user: userData});
+            //Ask the server to add a new user to the database.
+            await axios.post(`http://localhost:3001/api/user/signup`, 
+                {userData: userData});
             
-            alert("successfully registered");
+            alert("successfully registered.");
             //Send user back to the landing page after registration submit
             navigate("/")
         } catch (error) {
             console.log(error);
             alert("Something went wrong while creating your account.");
         }
-        //createUser(userData);
     }
 
     return (
@@ -121,7 +117,7 @@ export default function RegistrationContainer() {
                     onChange={handleChange}
                     required 
                     minLength="3"
-                    maxLength="50"
+                    maxLength="35"
                 />
             </div>
             <div className="mb-6">
@@ -177,7 +173,7 @@ export default function RegistrationContainer() {
                     value={registrationState.ageInput}
                     onChange={handleChange}
                     required 
-                    min="1" 
+                    min="6" 
                     max="125"
                 /> 
                </div>

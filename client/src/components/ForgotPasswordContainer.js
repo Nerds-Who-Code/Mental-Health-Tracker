@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
+import axios from 'axios';
 
 export default function ForgotPasswordContainer() {
 
@@ -11,12 +12,26 @@ export default function ForgotPasswordContainer() {
         setEmailInput(value);
     };
 
-    //Login authorization
-    const passwordReset = (e) => {
+    const passwordReset = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
 
         //Add reset code here
+
+        //Ask the server first if the email already exists in the database?
+        // try {
+        //     let response = await axios.put(
+        //         `http://localhost:3001/api/user/password-reset`,
+        //     );
+        //     if (response.status === 201) {
+        //     }
+        // }
+        // catch (error)
+        // {
+        //     console.log(error);
+        // }
+
+        
     };
 
     return (

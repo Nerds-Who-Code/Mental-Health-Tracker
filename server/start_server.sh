@@ -1,6 +1,6 @@
 #! /bin/bash
 
 clear
-PORT=3001 node index.js
+node ./src/index.js
 
 

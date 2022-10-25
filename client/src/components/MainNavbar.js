@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from "react-router-dom";
 import {Transition} from "@headlessui/react";
-import {logoutUser} from '../store';
+import {logoutUser} from '../redux/userDataSlice.js';
 
 function MainNavbar() {
   const navigate = useNavigate();

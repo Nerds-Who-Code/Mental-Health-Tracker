@@ -4,14 +4,26 @@
   "description": "mental-health-tracker-back-end",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "clear && nodemon -r dotenv/config ./src/index.js"
   },
   "author": "Nerds Who Code",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-pg-simple": "^7.0.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
-    "express-validator": "^6.14.2"
+    "express-lowercase-paths": "^1.0.0",
+    "express-rate-limit": "^6.6.0",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.2",
+    "helmet": "^6.0.0",
+    "morgan": "^1.10.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.8.0",
+    "rotating-file-stream": "^3.0.4"
   }
 }
