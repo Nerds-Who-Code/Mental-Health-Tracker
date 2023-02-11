@@ -18,8 +18,10 @@
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
+  "proxy": "http://localhost:3001",
   "scripts": {
     "start": "react-scripts start",
+    "tailwind": "echo tailwindCSS compiled && npx tailwindcss build -i ./src/index.css -o ./dist/output.min.css --watch --minify",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

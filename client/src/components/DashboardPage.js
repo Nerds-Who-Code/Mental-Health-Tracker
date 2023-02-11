@@ -24,20 +24,20 @@ export default function DashboardPage() {
     }, [userDataGlobalState.name]);
 
     return (
-    <div className='w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-b from-cyan-200 to-blue-200 text-slate-800'>
+    <div className=' flex flex-col items-center justify-center  text-slate-800 my-16'>
         <h1 className='text-2xl font-bold'>Dashboard</h1>
         <h2 className='text-xl m-2'>Welcome back {name}</h2>
         <h3 className='m-2'>What would you like to do today?</h3> 
         <div className='my-4 flex items-center justify-around'>
             <Link to="/add-entry">
                 <button 
-                    className='mx-2 px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'>
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2'>
                     Add new entry
                 </button>
             </Link>
             <Link to="/view-entries">
                 <button 
-                    className='mx-2 px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'>
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2'>
                     View my entries
                 </button>
                 </Link>            

@@ -166,8 +166,9 @@ APIrouter.post('/createUser/:username',
 
     try {
         const createdUser = await createUser(req.params.username, req.body.user);
-        if (!(createUser instanceof Error)) {
+        if (!(createdUser instanceof Error)) {
             res.status(201).send(createdUser);
+            return;
         }
         res.status(404).send(createdUser.message);
     } catch (error) {

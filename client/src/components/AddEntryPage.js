@@ -94,7 +94,6 @@ export default function AddEntryPage() {
             [e.target.name]: value
         });
     };
-
     // Send entry data to the database
     const addNewEntry = (e) => {
         //prevent page from refreshing
@@ -129,14 +128,13 @@ export default function AddEntryPage() {
     ];
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center my-16">
             <h1 className="my-2">{entryState.type} Tracker</h1>
-            <form 
-                id="addEntry" 
-                className="flex flex-col items-left justify-center  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" 
-                action="#" 
-                onSubmit={addNewEntry}>
-                <div>
+
+            <form id="addEntry" className="flex flex-col items-left justify-center  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={addNewEntry}>
+                
+                <div className='flex flew-row justify-around'>
+
                     <div className="radioInput">
                         
                         <input 
@@ -219,7 +217,9 @@ export default function AddEntryPage() {
                     onChange={handleChange} 
                 />
             
-                <input className="my-2 mx-2 px-4 py-2 leading-none  rounded text-white  hover:text-white bg-gradient-to-r from-green-300 to-blue-400 hover:from-cyan-200 hover:to-green-300 "
+
+                <input className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none mx-2 "
+
                     type="submit"
                     value="Add entry" 
                 />

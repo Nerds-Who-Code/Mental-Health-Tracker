@@ -20,10 +20,10 @@ export default function ForgotPasswordContainer() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center my-16">
             <h1 className="my-4">Password reset</h1>
             <form className="flex flex-col items-center justify-center" action="#" onSubmit={passwordReset}>
-            <label htmlFor="emailInput">Enter your email</label>
+            <label htmlFor="emailInput" className='my-2'>Enter your email</label>
                 <input 
                     type="email"
                     id="emailInput"
@@ -33,7 +33,7 @@ export default function ForgotPasswordContainer() {
                     required 
                 />
                 
-                <input className='my-2 px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-black hover:bg-white'
+                <input className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none my-2'
                     type="submit" 
                     value="Send" 
                 />

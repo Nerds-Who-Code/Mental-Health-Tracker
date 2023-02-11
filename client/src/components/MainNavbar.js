@@ -84,13 +84,17 @@ function MainNavbar() {
               </Link>
               <Link
                 to="/about"
-                className="text-blue-100 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+
+                className="text-sky-100 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+
               >
                 About
               </Link>
               <Link
                 to="/"
-                className="text-blue-100 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+
+                className="text-sky-100 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+
               >
                 Login
               </Link>
